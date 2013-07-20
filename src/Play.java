@@ -2,44 +2,43 @@ import java.util.*;
 
 public class Play {
 
-	static boolean gameOver = false; //when gameOver show all bombs/flags
+	boolean gameOver = false; //when gameOver show all flags/open all bombs
 
 	public static void main(String[] args) {
 		
-		Board.initializeBoard(Board.getBegBoard());
-		//Board.initializeBoard(Board.getMedBoard());
-		//Board.initializeBoard(Board.getExpBoard());
+		Board ricksters = new Board(8,8);
+		ricksters.initializeBoard();
 		
-//		while(getGameOver()!=true){
-//			scanner stuff
+		//if scans in a string such as easy it will create a board with 8,8
+
+	}
+
+	public Play(String a){
+//
+//		if(a.contains("easy")){
+//			new Board(8,8);
 //		}
-	
-	}
-	
-	public static void setGameOver(boolean over){
-		
-		gameOver = over;
-	}
-	
-	public static boolean getGameOver(){
-		
-		return gameOver;
-	}
-	
-	public static void openBox(Mine[][] array, int x, int y){
-		
-		while(Board.isValid(array,x,y)==false)
-			System.out.println("Please pick coordinates inside the "+array.length+" by "+array[1].length+" dementions");
-		
-		array[x][y].setOpened(true);
-		if(array[x][y].isBomb()==true)
-			setGameOver(true);
-		if(array[x][y].getBombsSurrounding()==0)
-			Board.openZeros(array, x, y);
-		else{
-			
-		}
+//			
+//		if(a.contains("medium")){
+//			new Board(16,16);
+//	}
+//			
+//		if(a.contains("hard")){
+//			new Board(30,16);
+//		}
 			
 	}
 
+	public void setGameOver(boolean over){
+
+		gameOver = over;
+	}
+
+	public boolean getGameOver(){
+
+		return gameOver;
+	}
+
 }
+
+

@@ -9,16 +9,18 @@ public class Mine {
 	int bombsSurrounding;
 	boolean flagged;
 	boolean bomb;
+	boolean wrong;
 	
 	int flagCount;
 	int openedCount;
 
-	public Mine(boolean opened, int bs, boolean flagged, boolean bomb){
+	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean wrong){
 		
 		this.opened = opened;
 		this.bombsSurrounding = bs;
 		this.flagged = flagged;
 		this.bomb = bomb;
+		this.wrong = wrong;
 		
 	}
 	
@@ -55,10 +57,23 @@ public class Mine {
 	public void setBomb(boolean a){
 		
 		bomb = a;
+		
 	}
 	
 	public boolean isBomb(){
 		
 		return bomb;
 	}
+	
+	public boolean isWrong(){
+		
+		return wrong;
+	}
+	
+	public void setWrong(boolean a){
+		
+		wrong = a;
+	}
+	
 }
+//System.out.println("Please pick coordinates inside the "+array.length+" by "+array[1].length+" dementions");
