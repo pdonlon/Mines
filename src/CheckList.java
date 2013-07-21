@@ -4,6 +4,11 @@ public class CheckList {
 	Node head;
 	Node tail;
 
+	public Node getHead(){
+		
+		return head;
+	}
+	
 	public void enque(int x, int y){
 
 		Node entering = new Node(x,y);
@@ -16,19 +21,24 @@ public class CheckList {
 		if(head == null)
 			head = entering;
 	}
-
-	public int[] deque(){
-
-		int[] array = new int[2];
+	
+	public int[] getValues(){
+		
+		int[] array = new int [2];
 		
 		int tempX = head.getXCord();
 		array[0] = tempX;
 		int tempY = head.getYCord();
 		array[1] = tempY;
 		
+		return array;
+		
+	}
+
+	public void deque(){ //not a classic deque (doesn't return anything)
+
 		head = head.getNext();
 
-		return array;
 	}
 }
 

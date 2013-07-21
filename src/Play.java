@@ -9,6 +9,26 @@ public class Play {
 		Board ricksters = new Board(8,8);
 		ricksters.initializeBoard();
 		
+		ricksters.openBox(3, 3);
+		
+//		CheckList list = new CheckList();
+//		list.enque(1,2);
+//		list.enque(3, 4);
+//		list.enque(5, 6);
+		
+//		for(int y=0; y<8; y++){
+//			for(int x=0; x<8; x++){
+//				ricksters.markFlagged(x,y);
+//			}
+//		}
+//		ricksters.openBox(3, 3);
+//		for(int y=0; y<8; y++){
+//			for(int x=0; x<8; x++){
+//				ricksters.markFlagged(x,y);
+//			}
+//		}
+		
+		
 		//if scans in a string such as easy it will create a board with 8,8
 
 	}
