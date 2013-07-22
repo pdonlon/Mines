@@ -6,15 +6,12 @@ public class Play {
 
 	public static void main(String[] args) {
 		
-		Board ricksters = new Board(8,8);
+		Board ricksters = new Board(16,16);
 		ricksters.initializeBoard();
 		
-		ricksters.openBox(3, 3);
-		
-//		CheckList list = new CheckList();
-//		list.enque(1,2);
-//		list.enque(3, 4);
-//		list.enque(5, 6);
+		ricksters.markFlagged(7, 7);
+		ricksters.openBox(7, 7);
+		ricksters.openBox(7, 7);
 		
 //		for(int y=0; y<8; y++){
 //			for(int x=0; x<8; x++){

@@ -5,15 +5,16 @@ public class FullList {
 	Node head;
 	Node tail;
 	
-	public boolean alreadyInList(int x, int y){
+	public boolean alreadyInFullList(int x, int y){
 		
 		boolean already = false;
+		Node pointer = head;
 		
-		while(head.getNext()!=null){
+		while(pointer.getNext()!=null){
 			
-			if(head.getXCord()==x && head.getYCord()==y)
+			if(pointer.getXCord()==x && pointer.getYCord()==y)
 				already = true;
-			head = head.getNext();
+			pointer = pointer.getNext();
 			
 		}
 		return already;
@@ -31,6 +32,20 @@ public class FullList {
 		if(head == null)
 			head = entering;
 		
+	}
+	
+	public String toString()
+	{
+		String s = "";
+
+		Node ptr = head;
+		while (ptr != null)
+		{
+			s += ptr.xCord+""+ptr.yCord+" ";
+			ptr = ptr.getNext();
+		}
+
+		return s;
 	}
 	
 	public Node getHead(){

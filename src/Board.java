@@ -9,6 +9,7 @@ public class Board {
 	Mine board[][];
 	int width;
 	int height;
+	int flagCount = 10;
 
 	public Mine[][] getBoard(){
 
@@ -102,34 +103,34 @@ public class Board {
 
 		FullList full = new FullList();
 		full.add(x,y);
-
+		
 		while (check.getHead()!=null){
 
-			check.deque(); //might have to change position
-
+			check.deque();
+			
 			for(int i=-1; i<2; i++){			
 				for(int j=-1; j<2; j++){
 
-					if(isValid(tempX+i,tempY+j)	&& (!full.alreadyInList(tempX+i, tempY+j))){
-	
-						board[tempX+i][tempY+j].setOpened(true);
+					if((isValid(tempX+i,tempY+j))&& 
+							(!full.alreadyInFullList(tempX+i, tempY+j))){
 
-						if(board[tempX+i][tempY+j].getBombsSurrounding()==0){ 
+						board[tempX+i][tempY+j].setOpened(true);
+						full.add(tempX+i, tempY+j); //add coordinates to not repeat
+
+						if((board[tempX+i][tempY+j].getBombsSurrounding()==0)){ 
 
 							check.enque(tempX+i,tempY+j);
-							
+
 						}
-						full.add(tempX+i, tempY+j); //add coordinates to not repeat
 					}
 				}
-				printBoard();
+
 			}
 			if(check.getHead()!=null){
+			
 				tempX = check.getValues()[0];
 				tempY = check.getValues()[1];
 			}
-			else
-				break;
 		}
 	}
 
@@ -138,12 +139,25 @@ public class Board {
 	public void markFlagged(int x, int y){
 
 		board[x][y].setFlagged(true);
+		
+		printBoard();
+	}
+	
+	public void removeFlag(int x, int y){
+		
+		board[x][y].setFlagged(false);
+		
+		printBoard();
 	}
 
 	public void openBox(int x, int y){
 
 		//if not already opened and valid (check before calling openBox)
-
+		
+		if(board[x][y].isFlagged())
+			removeFlag(x,y);
+		
+		else{
 		board[x][y].setOpened(true);
 
 		if(board[x][y].isBomb()){
@@ -169,7 +183,7 @@ public class Board {
 		else
 			printBoard();
 
-
+		}
 	}
 
 
