@@ -10,6 +10,8 @@ public class Board {
 	int width;
 	int height;
 	int flagCount = 10;
+	int startX;
+	int startY;
 
 	public Mine[][] getBoard(){
 
@@ -31,10 +33,18 @@ public class Board {
 
 			}
 		}
-		placeBombs();
-		placeBombsSurrounding();
 		printBoard();
 
+	}
+	
+	public void setStartXandY(int x, int y){
+		
+		startX = x;
+		startY = y;
+		
+		placeBombs();
+		placeBombsSurrounding();
+				
 	}
 
 	public void placeBombs(){
@@ -53,7 +63,7 @@ public class Board {
 			int rand1 = (int) (Math.random() * board.length); 
 			int rand2 = (int) (Math.random() * board[1].length); //to get the y (rectangle ones)
 
-			if(!board[rand1][rand2].isBomb()){
+			if(!board[rand1][rand2].isBomb() && notSurroundingStart(rand1,rand2)){
 				board[rand1][rand2].setBomb(true);
 				count--;
 			}
@@ -61,6 +71,10 @@ public class Board {
 	}
 
 	public void placeBombsSurrounding(){
+
+		//placed around first click 
+		//(make first click a 0)
+		//TODO
 
 		for(int y=0; y<board[1].length; y++){
 			for(int x=0; x<board.length; x++){
@@ -103,11 +117,11 @@ public class Board {
 
 		FullList full = new FullList();
 		full.add(x,y);
-		
+
 		while (check.getHead()!=null){
 
 			check.deque();
-			
+
 			for(int i=-1; i<2; i++){			
 				for(int j=-1; j<2; j++){
 
@@ -127,7 +141,7 @@ public class Board {
 
 			}
 			if(check.getHead()!=null){
-			
+
 				tempX = check.getValues()[0];
 				tempY = check.getValues()[1];
 			}
@@ -138,50 +152,81 @@ public class Board {
 
 	public void markFlagged(int x, int y){
 
-		board[x][y].setFlagged(true);
-		
-		printBoard();
+		if(flagCount>0){
+
+			board[x][y].setFlagged(true);
+
+			flagCount--;
+
+			printBoard();
+		}
 	}
-	
+
+	public boolean notSurroundingStart(int x, int y){
+
+		boolean notSurrounded = true;
+
+		for(int i=-1; i<2; i++){
+			for(int j=-1; j<2; j++){
+
+				if(x+j==startX && y+i==startY){
+
+					notSurrounded = false;
+					break;
+				}
+
+			}
+			if(!notSurrounded)
+				break;
+		}
+
+		return notSurrounded;
+	}
+
 	public void removeFlag(int x, int y){
-		
-		board[x][y].setFlagged(false);
-		
-		printBoard();
+
+		if(flagCount<11){
+
+			board[x][y].setFlagged(false);
+
+			flagCount++;
+
+			printBoard();
+		}
 	}
 
 	public void openBox(int x, int y){
 
 		//if not already opened and valid (check before calling openBox)
-		
+
 		if(board[x][y].isFlagged())
 			removeFlag(x,y);
-		
+
 		else{
-		board[x][y].setOpened(true);
+			board[x][y].setOpened(true);
 
-		if(board[x][y].isBomb()){
+			if(board[x][y].isBomb()){
 
-			for(int i=0; i<board[1].length; i++){
-				for(int k=0; k<board.length; k++){
+				for(int i=0; i<board[1].length; i++){
+					for(int k=0; k<board.length; k++){
 
-					if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-						board[k][i].setOpened(true);
+						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+							board[k][i].setOpened(true);
 
-					else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-						board[k][i].setWrong(true);
+						else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
+							board[k][i].setWrong(true);
+					}
 				}
+				printBoard();
+				System.out.print("GAME OVER! YOU LOSE!");
 			}
-			printBoard();
-			System.out.print("GAME OVER! YOU LOSE!");
-		}
 
-		else if(board[x][y].getBombsSurrounding()==0){
-			openZeros(x, y);
-			printBoard();
-		}
-		else
-			printBoard();
+			else if(board[x][y].getBombsSurrounding()==0){
+				openZeros(x, y);
+				printBoard();
+			}
+			else
+				printBoard();
 
 		}
 	}
