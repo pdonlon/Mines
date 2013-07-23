@@ -2,12 +2,16 @@ import java.util.*;
 
 public class Play {
 
-	static boolean gameOver = false; //when gameOver show all flags/open all bombs
+	Board playBoard;
+	
+	boolean win = false;
+	boolean lose = false;
+	
 
 	public static void main(String[] args) {
 
-		Board ricksters = new Board(16,16);
-		ricksters.initializeBoard();
+		Play game = new Play("easy");
+		game.playBoard.initializeBoard();
 
 		Scanner scan = new Scanner(System.in);
 
@@ -16,52 +20,67 @@ public class Play {
 		int x = scan.nextInt();
 		int y = scan.nextInt();
 
-		if(ricksters.isValid(x-1, y-1)){
-			ricksters.setStartXandY(x-1,y-1);
-			ricksters.openBox(x-1, y-1);
+		if(game.playBoard.isValid(x-1, y-1)){ //and being opened
+			game.playBoard.setStartXandY(x-1,y-1);
+			game.playBoard.openBox(x-1, y-1);
 		}
 
-		while(!gameOver){
+		while( (!game.gameOverWin()) && (!game.gameOverLose()) ){
 
-			System.out.println("Please place your x and y coordinates seperated by a space");
+			System.out.println("Please place your x and y coordinates seperated by a poop");
 
-			if(ricksters.isValid(x-1, y-1)){
+			if(game.playBoard.isValid(x-1, y-1)){
 			
 			x = scan.nextInt();
 			y = scan.nextInt();
 
-			ricksters.openBox(x-1,y-1); //left click -- right click will be markFlagged
+			game.playBoard.openBox(x-1,y-1); //left click -- right click will be markFlagged
 			}
 		}
+		
+		System.out.println("GAME OVER!");
+		
+		if(game.gameOverWin())
+			System.out.print("YOU WIN!");
+		
+		else
+			System.out.print("YOU LOSE!");
 
 
 	}
 
 	public Play(String a){
-		//
-		//		if(a.contains("easy")){
-		//			new Board(8,8);
-		//		}
-		//			
-		//		if(a.contains("medium")){
-		//			new Board(16,16);
-		//	}
-		//			
-		//		if(a.contains("hard")){
-		//			new Board(30,16);
-		//		}
+
+				if(a.contains("easy")){
+					playBoard = new Board(8,8);
+				}
+					
+				if(a.contains("medium")){
+					playBoard = new Board(16,16);
+			}
+					
+				if(a.contains("hard")){
+					playBoard = new Board(30,16);
+				}
 
 	}
 
-	public void setGameOver(boolean over){
+	public boolean gameOverWin(){
 
-		gameOver = over;
+		if((playBoard.getOpenedBoxCount() == (playBoard.getTotalBombs()) - (playBoard.getTotalBombs())))
+			win = true;
+		
+		return win;
+	}
+	
+	public boolean gameOverLose(){
+		
+		if(playBoard.getTouchedBomb())
+			lose = true;
+			
+		return lose;
 	}
 
-	public boolean getGameOver(){
-
-		return gameOver;
-	}
 
 }
 
