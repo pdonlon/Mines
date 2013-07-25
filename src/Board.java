@@ -162,7 +162,8 @@ public class Board {
 				for(int j=-1; j<2; j++){
 
 					if((isValid(tempX+i,tempY+j))&& 
-							(!full.alreadyInFullList(tempX+i, tempY+j))){
+							(!full.alreadyInFullList(tempX+i, tempY+j))&&
+							(!board[tempX+i][tempY+j].isOpened())){
 
 						board[tempX+i][tempY+j].setOpened(true);
 						openedBoxCount++;
@@ -242,15 +243,11 @@ public class Board {
 
 		else{
 			
-			openedBoxCount++;
-			
 				board[x][y].setOpened(true);
 
 				if(board[x][y].isBomb()){
 
 					touchedBomb = true;
-					
-					openedBoxCount--; 
 					
 					for(int i=0; i<board[1].length; i++){
 						for(int k=0; k<board.length; k++){
@@ -266,11 +263,14 @@ public class Board {
 				}
 
 				else if(board[x][y].getBombsSurrounding()==0){
+					openedBoxCount++;
 					openZeros(x, y);
 					printBoard();
 				}
-				else
+				else{
+					openedBoxCount++;
 					printBoard();
+				}
 
 		}
 	}

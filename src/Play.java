@@ -6,9 +6,12 @@ public class Play {
 	
 	boolean win = false;
 	boolean lose = false;
+	boolean gameOver = false;
 	
 
 	public static void main(String[] args) {
+		
+		
 
 		Play game = new Play("easy");
 		game.playBoard.initializeBoard();
@@ -25,10 +28,10 @@ public class Play {
 			game.playBoard.openBox(x-1, y-1);
 		}
 
-		while( (!game.gameOverWin()) && (!game.gameOverLose()) ){
+		while(!game.gameOver()){
 
-			System.out.println("Please place your x and y coordinates seperated by a poop");
-
+			System.out.println("Please place your x and y coordinates seperated by a space");
+			System.out.println(game.playBoard.getOpenedBoxCount());
 			if(game.playBoard.isValid(x-1, y-1)){
 			
 			x = scan.nextInt();
@@ -64,10 +67,19 @@ public class Play {
 				}
 
 	}
+	
+	public boolean gameOver(){
+		
+		if(gameOverWin() || gameOverLose())
+			
+			gameOver = true;
+		
+		return gameOver;
+	}
 
 	public boolean gameOverWin(){
-
-		if((playBoard.getOpenedBoxCount() == (playBoard.getTotalBombs()) - (playBoard.getTotalBombs())))
+ //try minus one (bug)
+		if((playBoard.getOpenedBoxCount() == (playBoard.getTotalBoxes()) - (playBoard.getTotalBombs())))
 			win = true;
 		
 		return win;
@@ -80,7 +92,6 @@ public class Play {
 			
 		return lose;
 	}
-
 
 }
 
