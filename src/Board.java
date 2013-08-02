@@ -27,10 +27,23 @@ public class Board {
 		return board;
 	}
 
-	public Board(int a, int b){
+	public Board(int width, int height){
 
-		board = new Mine[a][b];
+		this.width = width;
+		this.height = height;
+		
+		board = new Mine[width][height];
 
+	}
+	
+	public int getWidth(){
+		
+		return width;
+	}
+	
+	public int getHeight(){
+		
+		return height;
 	}
 	
 	public int getOpenedBoxCount(){
@@ -57,8 +70,8 @@ public class Board {
 		
 		setTotalBoxes();
 
-		for(int y=0; y<board[1].length; y++){
-			for(int x=0; x<board.length; x++){
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
 
 				board[x][y] = new Mine (false, 0, false, false, false); 
 
@@ -70,7 +83,7 @@ public class Board {
 	
 	public void setTotalBoxes(){
 		
-		totalBoxes = ((board[1].length)*(board.length));
+		totalBoxes = ((height)*(width));
 		
 	}
 
@@ -86,9 +99,9 @@ public class Board {
 
 	public void placeBombs(){
 
-		if(board.length == 8)
+		if(width == 8)
 			totalBombs = 10;
-		else if(board.length == 16 && board[1].length == 16)
+		else if(width == 16 && height == 16)
 			totalBombs = 40;
 		else
 			totalBombs = 99;
@@ -96,8 +109,8 @@ public class Board {
 		int count = totalBombs;
 
 		while(count > 0){
-			int rand1 = (int) (Math.random() * board.length); 
-			int rand2 = (int) (Math.random() * board[1].length); //to get the y (rectangle ones)
+			int rand1 = (int) (Math.random() * width); 
+			int rand2 = (int) (Math.random() * height); //to get the y (rectangle ones)
 
 			if(!board[rand1][rand2].isBomb() && notSurroundingStart(rand1,rand2)){
 				board[rand1][rand2].setBomb(true);
@@ -112,8 +125,8 @@ public class Board {
 		//(make first click a 0)
 		//TODO
 
-		for(int y=0; y<board[1].length; y++){
-			for(int x=0; x<board.length; x++){
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
 
 				if(board[x][y].isBomb()){
 
@@ -249,8 +262,8 @@ public class Board {
 
 					touchedBomb = true;
 					
-					for(int i=0; i<board[1].length; i++){
-						for(int k=0; k<board.length; k++){
+					for(int i=0; i<height; i++){
+						for(int k=0; k<width; k++){
 
 							if(board[k][i].isBomb()&&!board[k][i].isFlagged())
 								board[k][i].setOpened(true);
@@ -280,8 +293,8 @@ public class Board {
 
 	public void printBoard(){
 
-		for(int y=0; y<board[1].length; y++){
-			for(int x=0; x<board.length; x++){
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
 
 
 
