@@ -21,7 +21,7 @@ public class Play {
 
 	public static void main(String[] args) {
 
-		Play game = new Play("easy");
+		Play game = new Play("hard");
 		game.playBoard.initializeBoard();
 
 		JFrame window = new JFrame(""+game.getDifficulty());

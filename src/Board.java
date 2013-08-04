@@ -340,7 +340,6 @@ public class Board {
 
 	}
 
-
 	public void paintBoard(Graphics g){
 
 
@@ -352,6 +351,8 @@ public class Board {
 
 			for(int x=0; x<width; x++){
 
+				g.setColor(board[x][y].determineColor());
+
 				if(!board[x][y].isOpened()){
 
 					//					if(board[x][y].isWrong())
@@ -361,52 +362,16 @@ public class Board {
 					//						System.out.print("F ");
 
 					//else{
-					g.setColor(Color.BLACK);
 					g.drawRect(xSpacing, ySpacing, 28, 28);
 					//}	
 				}
-
 				else{
 
 					if(board[x][y].isBomb()){
-						g.setColor(Color.BLACK);
 						g.fillOval(xSpacing, ySpacing, 28, 28);
 					}
-
-
-					else if(board[x][y].getBombsSurrounding()==0){
-						g.setColor(Color.WHITE);
+					else
 						g.fillRect(xSpacing, ySpacing, 28, 28);
-					}
-
-					else{
-						if(board[x][y].getBombsSurrounding()==1)
-							g.setColor(Color.BLUE);
-
-						else if(board[x][y].getBombsSurrounding()==2)
-							g.setColor(Color.GREEN);
-
-						else if(board[x][y].getBombsSurrounding()==3)
-							g.setColor(Color.RED);
-
-						else if(board[x][y].getBombsSurrounding()==4)
-							g.setColor(Color.ORANGE);
-
-						else if(board[x][y].getBombsSurrounding()==5)
-							g.setColor(Color.MAGENTA);
-
-						else if(board[x][y].getBombsSurrounding()==6)
-							g.setColor(Color.CYAN);
-
-						else if(board[x][y].getBombsSurrounding()==7)
-							g.setColor(Color.DARK_GRAY);
-
-						else
-							g.setColor(Color.GRAY);
-						
-
-						g.fillRect(xSpacing, ySpacing, 28, 28);
-					}
 
 				}
 
@@ -415,6 +380,7 @@ public class Board {
 			ySpacing+= 30;
 		}
 	}
+
 }
 
 
