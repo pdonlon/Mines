@@ -1,6 +1,13 @@
 import java.util.*;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
 
 public class Play {
 
@@ -14,14 +21,15 @@ public class Play {
 
 	public static void main(String[] args) {
 
-		Play game = new Play("hard");
+		Play game = new Play("easy");
 		game.playBoard.initializeBoard();
 
-//		JFrame window = new JFrame();
-//		window.setSize(900,560);
-//		window.setTitle(""+game.getDifficulty());
-//		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		window.setVisible(true);
+		JFrame window = new JFrame(""+game.getDifficulty());
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Display d = new Display(game.playBoard);
+		window.add(d);
+		window.setSize(30*game.playBoard.getWidth()+5,30*game.playBoard.getHeight()+25);
+		window.setVisible(true);
 
 		Scanner scan = new Scanner(System.in);
 
@@ -34,17 +42,19 @@ public class Play {
 			game.playBoard.setStartXandY(x-1,y-1);
 			game.playBoard.openBox(x-1, y-1);
 		}
+		
+		d.repaint();
 
 		while(!game.gameOver()){
 
 			System.out.println("Please place your x and y coordinates seperated by a space");
-			System.out.println(game.playBoard.getOpenedBoxCount());
 			if(game.playBoard.isValid(x-1, y-1)){
 
 				x = scan.nextInt();
 				y = scan.nextInt();
 
 				game.playBoard.openBox(x-1,y-1); //left click -- right click will be markFlagged
+				d.repaint();
 			}
 		}
 
@@ -74,6 +84,8 @@ public class Play {
 		if(difficulty.contains("hard")){
 			playBoard = new Board(30,16);
 		}
+		
+		
 
 	}
 
@@ -92,7 +104,7 @@ public class Play {
 	}
 
 	public boolean gameOverWin(){
-		//try minus one (bug)
+		
 		if((playBoard.getOpenedBoxCount() == (playBoard.getTotalBoxes()) - (playBoard.getTotalBombs())))
 			win = true;
 
@@ -106,7 +118,39 @@ public class Play {
 
 		return lose;
 	}
+	
+public static class Display extends JPanel{
+	
+		Board displayBoard;
+		
+		public Display(Board array){
+			
+			displayBoard = array;
+			
+		}
+		
+		public void paintComponent(Graphics g){
+			
+			super.paintComponent(g);
+			this.setBackground(Color.WHITE);
+			
+			displayBoard.paintBoard(g);
+			
+//			g.setColor(Color.BLUE);
+//			g.fillRect(25, 25, 100, 30);
+//			
+//			g.setColor(new Color(190,81,215)); //red, green, blue nothing more than 255
+//			g.fillRect(25, 65, 100, 30);
+//			
+//			g.setColor(Color.RED);
+//			g.drawString("MINESWEEPER", 100, 200); // String, x, y
+			
+		}
+		
+	}
+	
 
+	
 }
 
 

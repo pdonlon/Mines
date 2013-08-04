@@ -1,3 +1,8 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.color.*;
+
+import javax.swing.JPanel;
 
 public class Board {
 
@@ -9,16 +14,16 @@ public class Board {
 	Mine board[][];
 	int width;
 	int height;
-	
+
 	int flagCount = 10;
 	int openedBoxCount; 
-	
+
 	int totalBombs;
 	int totalBoxes;
-	
+
 	int startX;
 	int startY;
-	
+
 	boolean touchedBomb = false;
 
 
@@ -31,43 +36,43 @@ public class Board {
 
 		this.width = width;
 		this.height = height;
-		
+
 		board = new Mine[width][height];
 
 	}
-	
+
 	public int getWidth(){
-		
+
 		return width;
 	}
-	
+
 	public int getHeight(){
-		
+
 		return height;
 	}
-	
+
 	public int getOpenedBoxCount(){
-		
+
 		return openedBoxCount;
 	}
-	
+
 	public int getTotalBombs(){
-		
+
 		return totalBombs;
 	}
-	
+
 	public int getTotalBoxes(){
-		
+
 		return totalBoxes;
 	}
-	
+
 	public boolean getTouchedBomb(){
-		
+
 		return touchedBomb;
 	}
 
 	public void initializeBoard(){
-		
+
 		setTotalBoxes();
 
 		for(int y=0; y<height; y++){
@@ -80,11 +85,11 @@ public class Board {
 		printBoard();
 
 	}
-	
+
 	public void setTotalBoxes(){
-		
+
 		totalBoxes = ((height)*(width));
-		
+
 	}
 
 	public void setStartXandY(int x, int y){
@@ -180,7 +185,7 @@ public class Board {
 
 						board[tempX+i][tempY+j].setOpened(true);
 						openedBoxCount++;
-						
+
 						full.add(tempX+i, tempY+j); //add coordinates to not repeat
 
 						if((board[tempX+i][tempY+j].getBombsSurrounding()==0)){ 
@@ -255,40 +260,38 @@ public class Board {
 			removeFlag(x,y);
 
 		else{
-			
-				board[x][y].setOpened(true);
 
-				if(board[x][y].isBomb()){
+			board[x][y].setOpened(true);
 
-					touchedBomb = true;
-					
-					for(int i=0; i<height; i++){
-						for(int k=0; k<width; k++){
+			if(board[x][y].isBomb()){
 
-							if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-								board[k][i].setOpened(true);
+				touchedBomb = true;
 
-							else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-								board[k][i].setWrong(true);
-						}
+				for(int i=0; i<height; i++){
+					for(int k=0; k<width; k++){
+
+						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+							board[k][i].setOpened(true);
+
+						else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
+							board[k][i].setWrong(true);
 					}
-					printBoard();
 				}
+				printBoard();
+			}
 
-				else if(board[x][y].getBombsSurrounding()==0){
-					openedBoxCount++;
-					openZeros(x, y);
-					printBoard();
-				}
-				else{
-					openedBoxCount++;
-					printBoard();
-				}
+			else if(board[x][y].getBombsSurrounding()==0){
+				openedBoxCount++;
+				openZeros(x, y);
+				printBoard();
+			}
+			else{
+				openedBoxCount++;
+				printBoard();
+			}
 
 		}
 	}
-
-
 
 
 	public void printBoard(){
@@ -331,4 +334,87 @@ public class Board {
 		System.out.println();
 	}
 
+	public void initializeClicking(){
+
+
+
+	}
+
+
+	public void paintBoard(Graphics g){
+
+
+		int ySpacing = 2;
+
+		for(int y=0; y<height; y++){
+
+			int xSpacing = 3;
+
+			for(int x=0; x<width; x++){
+
+				if(!board[x][y].isOpened()){
+
+					//					if(board[x][y].isWrong())
+					//						System.out.print("X ");
+					//
+					//					else if(board[x][y].isFlagged())
+					//						System.out.print("F ");
+
+					//else{
+					g.setColor(Color.BLACK);
+					g.drawRect(xSpacing, ySpacing, 28, 28);
+					//}	
+				}
+
+				else{
+
+					if(board[x][y].isBomb()){
+						g.setColor(Color.BLACK);
+						g.fillOval(xSpacing, ySpacing, 28, 28);
+					}
+
+
+					else if(board[x][y].getBombsSurrounding()==0){
+						g.setColor(Color.WHITE);
+						g.fillRect(xSpacing, ySpacing, 28, 28);
+					}
+
+					else{
+						if(board[x][y].getBombsSurrounding()==1)
+							g.setColor(Color.BLUE);
+
+						else if(board[x][y].getBombsSurrounding()==2)
+							g.setColor(Color.GREEN);
+
+						else if(board[x][y].getBombsSurrounding()==3)
+							g.setColor(Color.RED);
+
+						else if(board[x][y].getBombsSurrounding()==4)
+							g.setColor(Color.ORANGE);
+
+						else if(board[x][y].getBombsSurrounding()==5)
+							g.setColor(Color.MAGENTA);
+
+						else if(board[x][y].getBombsSurrounding()==6)
+							g.setColor(Color.CYAN);
+
+						else if(board[x][y].getBombsSurrounding()==7)
+							g.setColor(Color.DARK_GRAY);
+
+						else
+							g.setColor(Color.GRAY);
+						
+
+						g.fillRect(xSpacing, ySpacing, 28, 28);
+					}
+
+				}
+
+				xSpacing += 30;
+			}
+			ySpacing+= 30;
+		}
+	}
 }
+
+
