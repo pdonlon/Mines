@@ -9,7 +9,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class Play {
+public class Play extends JFrame implements ActionListener, MouseMotionListener, MouseListener{
 
 	Board playBoard;
 
@@ -24,47 +24,51 @@ public class Play {
 		Play game = new Play("hard");
 		game.playBoard.initializeBoard();
 
-		JFrame window = new JFrame(""+game.getDifficulty());
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//JFrame window = new JFrame(""+game.getDifficulty());
+		game.setTitle(""+game.getDifficulty());
+		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Display d = new Display(game.playBoard);
-		window.add(d);
-		window.setSize(30*game.playBoard.getWidth()+5,30*game.playBoard.getHeight()+25);
-		window.setVisible(true);
-
-		Scanner scan = new Scanner(System.in);
-
-		System.out.println("Please place your x and y coordinates seperated by a space");
-
-		int x = scan.nextInt();
-		int y = scan.nextInt();
-
-		if(game.playBoard.isValid(x-1, y-1)){ //and being opened
-			game.playBoard.setStartXandY(x-1,y-1);
-			game.playBoard.openBox(x-1, y-1);
-		}
+		game.add(d);
+		game.setSize(30*game.playBoard.getWidth()+5,30*game.playBoard.getHeight()+25);
+		game.setVisible(true);
+		game.setResizable(false);
 		
-		d.repaint();
+		game.addMouseListener(game);
 
-		while(!game.gameOver()){
-
-			System.out.println("Please place your x and y coordinates seperated by a space");
-			if(game.playBoard.isValid(x-1, y-1)){
-
-				x = scan.nextInt();
-				y = scan.nextInt();
-
-				game.playBoard.openBox(x-1,y-1); //left click -- right click will be markFlagged
-				d.repaint();
-			}
-		}
-
-		System.out.println("GAME OVER!");
-
-		if(game.gameOverWin())
-			System.out.print("YOU WIN!");
-
-		else
-			System.out.print("YOU LOSE!");
+//		Scanner scan = new Scanner(System.in);
+//
+//		System.out.println("Please place your x and y coordinates seperated by a space");
+//
+//		int x = scan.nextInt();
+//		int y = scan.nextInt();
+//
+//		if(game.playBoard.isValid(x-1, y-1)){ //and being opened
+//			game.playBoard.setStartXandY(x-1,y-1);
+//			game.playBoard.openBox(x-1, y-1);
+//		}
+//		
+//		d.repaint();
+//
+//		while(!game.gameOver()){
+//
+//			System.out.println("Please place your x and y coordinates seperated by a space");
+//			if(game.playBoard.isValid(x-1, y-1)){
+//
+//				x = scan.nextInt();
+//				y = scan.nextInt();
+//
+//				game.playBoard.openBox(x-1,y-1); //left click -- right click will be markFlagged
+//				d.repaint();
+//			}
+//		}
+//
+//		System.out.println("GAME OVER!");
+//
+//		if(game.gameOverWin())
+//			System.out.print("YOU WIN!");
+//
+//		else
+//			System.out.print("YOU LOSE!");
 
 
 	}
@@ -148,6 +152,58 @@ public static class Display extends JPanel{
 		}
 		
 	}
+
+public void mouseClicked(MouseEvent e) {
+	
+	int x = e.getX()/30;
+	int y = (e.getY()-30)/30;
+	
+	if(SwingUtilities.isLeftMouseButton(e)){
+	
+		playBoard.open(x, y);
+	}
+	else if(SwingUtilities.isRightMouseButton(e)){
+		
+		playBoard.markFlagged(x, y);
+	}
+	
+	repaint();
+}
+
+public void mousePressed(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void mouseReleased(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void mouseEntered(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void mouseExited(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void mouseDragged(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void mouseMoved(MouseEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void actionPerformed(ActionEvent e) {
+	// TODO Auto-generated method stub
+	
+}
 	
 
 	

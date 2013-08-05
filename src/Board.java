@@ -24,6 +24,8 @@ public class Board {
 	int startX;
 	int startY;
 
+	boolean firstTurn = true;
+
 	boolean touchedBomb = false;
 
 
@@ -71,6 +73,12 @@ public class Board {
 		return touchedBomb;
 	}
 
+	public void open(int x, int y){
+
+		openBox(x,y);
+
+	}
+
 	public void initializeBoard(){
 
 		setTotalBoxes();
@@ -82,7 +90,7 @@ public class Board {
 
 			}
 		}
-		printBoard();
+
 
 	}
 
@@ -209,14 +217,23 @@ public class Board {
 
 	public void markFlagged(int x, int y){
 
-		if(flagCount>0){
+		if(board[x][y].isFlagged()){
+
+			board[x][y].setFlagged(false);
+
+			flagCount++;
+
+		}
+
+		else if(flagCount>0){
 
 			board[x][y].setFlagged(true);
 
 			flagCount--;
 
-			printBoard();
+
 		}
+
 	}
 
 	public boolean notSurroundingStart(int x, int y){
@@ -248,48 +265,54 @@ public class Board {
 
 			flagCount++;
 
-			printBoard();
+
 		}
 	}
 
 	public void openBox(int x, int y){
 
-		//if not already opened and valid (check before calling openBox)
+		if(firstTurn){
 
-		if(board[x][y].isFlagged())
-			removeFlag(x,y);
+			setStartXandY(x,y);
 
+			firstTurn = false;
+			openBox(x,y);
+
+		}
 		else{
+			if(board[x][y].isFlagged())
+				removeFlag(x,y);
 
-			board[x][y].setOpened(true);
-
-			if(board[x][y].isBomb()){
-
-				touchedBomb = true;
-
-				for(int i=0; i<height; i++){
-					for(int k=0; k<width; k++){
-
-						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-							board[k][i].setOpened(true);
-
-						else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-							board[k][i].setWrong(true);
-					}
-				}
-				printBoard();
-			}
-
-			else if(board[x][y].getBombsSurrounding()==0){
-				openedBoxCount++;
-				openZeros(x, y);
-				printBoard();
-			}
 			else{
-				openedBoxCount++;
-				printBoard();
-			}
 
+				board[x][y].setOpened(true);
+
+				if(board[x][y].isBomb()){
+
+					touchedBomb = true;
+
+					for(int i=0; i<height; i++){
+						for(int k=0; k<width; k++){
+
+							if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+								board[k][i].setOpened(true);
+
+							else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
+								board[k][i].setWrong(true);
+						}
+					}
+
+				}
+
+				else if(board[x][y].getBombsSurrounding()==0){
+					openedBoxCount++;
+					openZeros(x, y);
+
+				}
+				else
+					openedBoxCount++;
+
+			}
 		}
 	}
 
@@ -334,14 +357,11 @@ public class Board {
 		System.out.println();
 	}
 
-	public void initializeClicking(){
-
-
-
-	}
 
 	public void paintBoard(Graphics g){
 
+		int[] xArray = new int[3];
+		int[] yArray = new int[3];
 
 		int ySpacing = 2;
 
@@ -355,19 +375,31 @@ public class Board {
 
 				if(!board[x][y].isOpened()){
 
-					//					if(board[x][y].isWrong())
-					//						System.out.print("X ");
-					//
-					//					else if(board[x][y].isFlagged())
-					//						System.out.print("F ");
+					if(board[x][y].isWrong())
+						g.fillRect(xSpacing, ySpacing, 28, 28);
+					
+				else if(board[x][y].isFlagged()){
+						xArray[0] = xSpacing; //top left
+						yArray[0] = ySpacing;
 
-					//else{
-					g.drawRect(xSpacing, ySpacing, 28, 28);
-					//}	
+						xArray[1] = xSpacing+30; //top mid
+						yArray[1] = ySpacing+15;
+
+						xArray[2] = xSpacing; //bottom right
+						yArray[2] = ySpacing+30;
+
+						g.fillPolygon(xArray,yArray, 3);
+					}
+
+					else
+						g.drawRect(xSpacing, ySpacing, 28, 28);
+
 				}
 				else{
 
 					if(board[x][y].isBomb()){
+
+						g.drawRect(xSpacing, ySpacing, 28, 28);
 						g.fillOval(xSpacing, ySpacing, 28, 28);
 					}
 					else
