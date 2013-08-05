@@ -389,6 +389,8 @@ public class Board {
 						yArray[2] = ySpacing+30;
 
 						g.fillPolygon(xArray,yArray, 3);
+						g.setColor(Color.BLACK);
+						g.drawRect(xSpacing, ySpacing, 28, 28);
 					}
 
 					else
