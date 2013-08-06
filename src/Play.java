@@ -19,7 +19,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public static void main(String[] args) {
 
-		Play game = new Play("hard");
+		Play game = new Play("easy");
 
 		game.playBoard.initializeBoard();
 		
@@ -127,8 +127,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			updateFlagTitle();
 		}
 
-		repaint();
 	}
+		repaint();
 	}
 
 	public void mousePressed(MouseEvent e) {

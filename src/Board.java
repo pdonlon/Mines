@@ -15,7 +15,7 @@ public class Board {
 	int width;
 	int height;
 
-	int flagCount = 10;
+	int flagCount;
 	int openedBoxCount; 
 
 	int totalBombs;
@@ -44,6 +44,17 @@ public class Board {
 		board = new Mine[width][height];
 
 		totalBoxes = width*height;
+		
+		if(width == 8)
+			totalBombs = 10;
+		
+		else if(width == 16)
+			totalBombs = 40;
+		
+		else
+			totalBombs = 99;
+		
+		flagCount = totalBombs;
 	}
 
 	public int getWidth(){
@@ -126,13 +137,6 @@ public class Board {
 	}
 
 	public void placeBombs(){
-
-		if(width == 8)
-			totalBombs = 10;
-		else if(width == 16 && height == 16)
-			totalBombs = 40;
-		else
-			totalBombs = 99;
 
 		int count = totalBombs;
 
