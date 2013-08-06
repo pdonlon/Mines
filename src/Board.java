@@ -426,6 +426,11 @@ public class Board {
 					}
 					else
 						g.fillRect(xSpacing, ySpacing, 28, 28);
+					
+					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
+						g.setColor(Color.BLACK);
+						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
+					}
 
 				}
 
