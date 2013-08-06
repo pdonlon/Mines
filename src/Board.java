@@ -395,14 +395,14 @@ public class Board {
 						g.fillRect(xSpacing, ySpacing, 28, 28);
 
 					else if(board[x][y].isFlagged()){
-						xArray[0] = xSpacing; //top left
-						yArray[0] = ySpacing;
+						xArray[0] = xSpacing+10; //top left
+						yArray[0] = ySpacing+8;
 
-						xArray[1] = xSpacing+30; //top mid
-						yArray[1] = ySpacing+15;
+						xArray[1] = xSpacing+20; //top mid
+						yArray[1] = ySpacing+13;
 
-						xArray[2] = xSpacing; //bottom right
-						yArray[2] = ySpacing+30;
+						xArray[2] = xSpacing+10; //bottom right
+						yArray[2] = ySpacing+16;
 
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
