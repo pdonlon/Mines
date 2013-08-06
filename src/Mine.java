@@ -81,7 +81,10 @@ public class Mine {
 
 		Color color;
 		
-		if(flagged)
+		if(wrong)
+			color = Color.BLACK;
+		
+		else if(flagged)
 			color = Color.RED;
 
 		else if(bomb || !opened)

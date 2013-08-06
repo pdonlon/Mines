@@ -23,9 +23,11 @@ public class Board {
 
 	int startX;
 	int startY;
+	
+	boolean win = false;
+	boolean lose = false;
 
 	boolean firstTurn = true;
-
 	boolean touchedBomb = false;
 
 
@@ -38,9 +40,10 @@ public class Board {
 
 		this.width = width;
 		this.height = height;
-
+		
 		board = new Mine[width][height];
 
+		totalBoxes = width*height;
 	}
 
 	public int getWidth(){
@@ -72,16 +75,34 @@ public class Board {
 
 		return touchedBomb;
 	}
+	
+	public int getFlagCount(){ //Let's play access flags
+		
+		return flagCount;
+	}
+	
+	public boolean getWin(){
+		
+		return win;
+	}
+	
+	public boolean getLose(){
+		
+		return lose;
+	}
 
-	public void open(int x, int y){
+	public void open(int x, int y){ //Play can't access Mines so it is a double method
 
 		openBox(x,y);
 
 	}
+	
+	public boolean bomb(int x, int y){ //Play can't access Mines so it is a double method
+		
+		return board[x][y].isBomb();
+	}
 
 	public void initializeBoard(){
-
-		setTotalBoxes();
 
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
@@ -91,12 +112,6 @@ public class Board {
 			}
 		}
 
-
-	}
-
-	public void setTotalBoxes(){
-
-		totalBoxes = ((height)*(width));
 
 	}
 
@@ -133,10 +148,6 @@ public class Board {
 	}
 
 	public void placeBombsSurrounding(){
-
-		//placed around first click 
-		//(make first click a 0)
-		//TODO
 
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
@@ -191,6 +202,9 @@ public class Board {
 							(!full.alreadyInFullList(tempX+i, tempY+j))&&
 							(!board[tempX+i][tempY+j].isOpened())){
 
+						if(board[tempX+i][tempY+j].isFlagged())
+							removeFlag(tempX+i,tempY+j);
+
 						board[tempX+i][tempY+j].setOpened(true);
 						openedBoxCount++;
 
@@ -225,7 +239,7 @@ public class Board {
 
 		}
 
-		else if(flagCount>0){
+		else if(flagCount>0 && !board[x][y].isOpened()){
 
 			board[x][y].setFlagged(true);
 
@@ -270,8 +284,11 @@ public class Board {
 	}
 
 	public void openBox(int x, int y){
+		
+		if(board[x][y].isFlagged())
+			removeFlag(x,y);
 
-		if(firstTurn){
+		else if(firstTurn){
 
 			setStartXandY(x,y);
 
@@ -280,41 +297,40 @@ public class Board {
 
 		}
 		else{
-			if(board[x][y].isFlagged())
-				removeFlag(x,y);
+			
+			board[x][y].setOpened(true);
 
-			else{
+			if(board[x][y].isBomb()){
 
-				board[x][y].setOpened(true);
+				touchedBomb = true;
+				lose = true;
+				
+				for(int i=0; i<height; i++){
+					for(int k=0; k<width; k++){
 
-				if(board[x][y].isBomb()){
+						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+							board[k][i].setOpened(true);
 
-					touchedBomb = true;
-
-					for(int i=0; i<height; i++){
-						for(int k=0; k<width; k++){
-
-							if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-								board[k][i].setOpened(true);
-
-							else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-								board[k][i].setWrong(true);
-						}
+						else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
+							board[k][i].setWrong(true);
 					}
-
 				}
-
-				else if(board[x][y].getBombsSurrounding()==0){
-					openedBoxCount++;
-					openZeros(x, y);
-
-				}
-				else
-					openedBoxCount++;
 
 			}
+
+			else if(board[x][y].getBombsSurrounding()==0){
+				openedBoxCount++;
+				openZeros(x, y);
+
+			}
+			else
+				openedBoxCount++;
+
 		}
+		if(openedBoxCount == totalBoxes - totalBombs)
+			win = true;
 	}
+
 
 
 	public void printBoard(){
@@ -377,8 +393,8 @@ public class Board {
 
 					if(board[x][y].isWrong())
 						g.fillRect(xSpacing, ySpacing, 28, 28);
-					
-				else if(board[x][y].isFlagged()){
+
+					else if(board[x][y].isFlagged()){
 						xArray[0] = xSpacing; //top left
 						yArray[0] = ySpacing;
 
