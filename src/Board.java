@@ -436,15 +436,15 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 						g.drawRect(xSpacing, ySpacing, 28, 28);
-						g.fillOval(xSpacing+7, ySpacing+7, 13, 13);
-						g.drawLine(xSpacing+5, ySpacing+5, xSpacing+23, ySpacing+23); //top left/bottom right
-						g.drawLine(xSpacing+3, ySpacing+14, xSpacing+25, ySpacing+14);//mid 
-						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
-						g.drawLine(xSpacing+14, ySpacing+3, xSpacing+14, ySpacing+25);//top/down
+						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
+						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
+						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
+						g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
+						g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
 
 					}
 					else
-						g.fillRect(xSpacing, ySpacing, 28, 28);
+						g.fillRect(xSpacing+1, ySpacing+1, 28, 28);
 
 					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
 						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
