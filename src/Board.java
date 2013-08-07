@@ -409,6 +409,7 @@ public class Board {
 					if(board[x][y].isWrong()){ //draws X
 						g.drawLine(xSpacing+3, ySpacing+3, xSpacing+25, ySpacing+25); //top left/bottom right
 						g.drawLine(xSpacing+25, ySpacing+3, xSpacing+3, ySpacing+25);//top right/bottom left
+						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
 					}
 					
 					else if(board[x][y].isFlagged()){
@@ -423,12 +424,12 @@ public class Board {
 
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
-						g.drawRect(xSpacing, ySpacing, 28, 28);
+						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
 
 					else
-						g.drawRect(xSpacing, ySpacing, 28, 28);
+						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
 
 				}
 				else{
@@ -444,7 +445,7 @@ public class Board {
 
 					}
 					else
-						g.fillRect(xSpacing+1, ySpacing+1, 28, 28);
+						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 
 					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
 						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
