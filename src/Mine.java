@@ -94,7 +94,7 @@ public class Mine {
 			color = Color.WHITE;
 
 		else if(bombsSurrounding==1)
-			color = Color.BLUE;
+			color = Color.CYAN;
 
 		else if(bombsSurrounding==2)
 			color = Color.GREEN;
@@ -109,7 +109,7 @@ public class Mine {
 			color = Color.MAGENTA;
 
 		else if(bombsSurrounding==6)
-			color = Color.CYAN;
+			color = Color.YELLOW;
 
 		else if(bombsSurrounding==7)
 			color = Color.DARK_GRAY;

@@ -14,27 +14,21 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	Board playBoard;
 
 	String difficulty;
-	
+
 	boolean gameOver = false;
 
 	public static void main(String[] args) {
 
-		Play game = new Play("easy");
+		JFrame secret = new JFrame();
 
+		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
+		
+		
+		Play game = new Play("easy");
 		game.playBoard.initializeBoard();
 		
-		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
-
 		//JFrame window = new JFrame(""+game.getDifficulty());
-		game.setTitle(""+game.getDifficulty()+"     Flag Count: "+game.playBoard.getFlagCount());
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Display d = new Display(game.playBoard);
-		game.add(d);
-		game.setSize(30*game.playBoard.getWidth()+5,30*game.playBoard.getHeight()+25);
-		game.setVisible(true);
-		game.setResizable(false);
-
-		game.addMouseListener(game);
+		
 
 	}
 
@@ -53,6 +47,16 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(difficulty.contains("hard")){
 			playBoard = new Board(30,16);
 		}
+		
+		Display d = new Display();
+		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.add(d);
+		this.setSize(30*this.playBoard.getWidth()+5,30*this.playBoard.getHeight()+25);
+		this.setVisible(true);
+		this.setResizable(false);
+
+		this.addMouseListener(this);
 
 	}
 
@@ -70,64 +74,50 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		return gameOver;
 	}
 
-	public static class Display extends JPanel{
-
-		Board displayBoard;
-
-		public Display(Board array){
-
-			displayBoard = array;
-
-		}
+	public class Display extends JPanel{
 
 		public void paintComponent(Graphics g){
 
 			super.paintComponent(g);
 			this.setBackground(Color.WHITE);
 
-			displayBoard.paintBoard(g);
+			playBoard.paintBoard(g);
 
-			//			g.setColor(Color.BLUE);
-			//			g.fillRect(25, 25, 100, 30);
-			//			
-			//			g.setColor(new Color(190,81,215)); //red, green, blue nothing more than 255
-			//			g.fillRect(25, 65, 100, 30);
-			//			
-			//			g.setColor(Color.RED);
-			//			g.drawString("MINESWEEPER", 100, 200); // String, x, y
 
 		}
 
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		
-		
+
+
 		//TODO
 		//after game over left click and new game starts
-		
+
 		//TODO 
 		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
-		
+
 		if(!gameOver()){
 
-		int x = e.getX()/30;
-		int y = (e.getY()-30)/30;
+			int x = e.getX()/30;
+			int y = (e.getY()-30)/30;
 
-		if(SwingUtilities.isLeftMouseButton(e)){
-
-			playBoard.open(x, y);
+			if(SwingUtilities.isLeftMouseButton(e)){
+	
+					playBoard.open(x, y);
+				
+				if(gameOver())
+					gameOverTitle();
+			}
 			
-			if(gameOver())
-				gameOverTitle();
-		}
-		else if(SwingUtilities.isRightMouseButton(e)){
+			else if(SwingUtilities.isRightMouseButton(e)){
 
-			playBoard.markFlagged(x, y);
+				playBoard.markFlagged(x, y);
+			}
+
+		}
+		if(!gameOver)
 			updateFlagTitle();
-		}
-
-	}
 		repaint();
 	}
 
@@ -175,9 +165,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public void gameOverTitle(){
 
 		if(playBoard.getWin())
-		
+
 			setTitle("GAME OVER! YOU WIN!");
-		
+
 		else
 			setTitle("GAME OVER! YOU LOSE");
 

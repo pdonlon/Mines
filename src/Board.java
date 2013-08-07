@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.color.*;
 
@@ -23,7 +24,7 @@ public class Board {
 
 	int startX;
 	int startY;
-	
+
 	boolean win = false;
 	boolean lose = false;
 
@@ -40,20 +41,20 @@ public class Board {
 
 		this.width = width;
 		this.height = height;
-		
+
 		board = new Mine[width][height];
 
 		totalBoxes = width*height;
-		
+
 		if(width == 8)
 			totalBombs = 10;
-		
+
 		else if(width == 16)
 			totalBombs = 40;
-		
+
 		else
 			totalBombs = 99;
-		
+
 		flagCount = totalBombs;
 	}
 
@@ -86,20 +87,30 @@ public class Board {
 
 		return touchedBomb;
 	}
-	
+
 	public int getFlagCount(){ //Let's play access flags
-		
+
 		return flagCount;
 	}
-	
+
 	public boolean getWin(){
-		
+
 		return win;
 	}
-	
+
 	public boolean getLose(){
-		
+
 		return lose;
+	}
+
+	public boolean flagged(int x, int y){
+
+		boolean flag = false;
+		if(board[x][y].isFlagged())
+			flag = true;
+
+		return flag;
+
 	}
 
 	public void open(int x, int y){ //Play can't access Mines so it is a double method
@@ -107,9 +118,9 @@ public class Board {
 		openBox(x,y);
 
 	}
-	
+
 	public boolean bomb(int x, int y){ //Play can't access Mines so it is a double method
-		
+
 		return board[x][y].isBomb();
 	}
 
@@ -288,7 +299,7 @@ public class Board {
 	}
 
 	public void openBox(int x, int y){
-		
+
 		if(board[x][y].isFlagged())
 			removeFlag(x,y);
 
@@ -301,14 +312,14 @@ public class Board {
 
 		}
 		else{
-			
+
 			board[x][y].setOpened(true);
 
 			if(board[x][y].isBomb()){
 
 				touchedBomb = true;
 				lose = true;
-				
+
 				for(int i=0; i<height; i++){
 					for(int k=0; k<width; k++){
 
@@ -395,9 +406,11 @@ public class Board {
 
 				if(!board[x][y].isOpened()){
 
-					if(board[x][y].isWrong())
-						g.fillRect(xSpacing, ySpacing, 28, 28);
-
+					if(board[x][y].isWrong()){ //draws X
+						g.drawLine(xSpacing+3, ySpacing+3, xSpacing+25, ySpacing+25); //top left/bottom right
+						g.drawLine(xSpacing+25, ySpacing+3, xSpacing+3, ySpacing+25);//top right/bottom left
+					}
+					
 					else if(board[x][y].isFlagged()){
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
@@ -411,6 +424,7 @@ public class Board {
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
 						g.drawRect(xSpacing, ySpacing, 28, 28);
+						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
 
 					else
@@ -422,12 +436,21 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 						g.drawRect(xSpacing, ySpacing, 28, 28);
-						g.fillOval(xSpacing, ySpacing, 28, 28);
+						g.fillOval(xSpacing+7, ySpacing+7, 13, 13);
+						g.drawLine(xSpacing+5, ySpacing+5, xSpacing+23, ySpacing+23); //top left/bottom right
+						g.drawLine(xSpacing+3, ySpacing+14, xSpacing+25, ySpacing+14);//mid 
+						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
+						g.drawLine(xSpacing+14, ySpacing+3, xSpacing+14, ySpacing+25);//top/down
+
 					}
 					else
 						g.fillRect(xSpacing, ySpacing, 28, 28);
-					
+
 					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
+						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
+						Font font = new Font("SANS_SERIF", Font.BOLD,10); 
+						g.setFont(font);
+
 						g.setColor(Color.BLACK);
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
 					}
