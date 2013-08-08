@@ -312,6 +312,8 @@ public class Board {
 
 		}
 		else{
+			
+			if(!board[x][y].isOpened()){
 
 			board[x][y].setOpened(true);
 
@@ -340,7 +342,7 @@ public class Board {
 			}
 			else
 				openedBoxCount++;
-
+			}
 		}
 		if(openedBoxCount == totalBoxes - totalBombs)
 			win = true;

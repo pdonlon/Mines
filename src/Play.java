@@ -24,7 +24,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
 		
 		
-		Play game = new Play("easy");
+		Play game = new Play("hard");
 		game.playBoard.initializeBoard();
 		
 		//JFrame window = new JFrame(""+game.getDifficulty());
