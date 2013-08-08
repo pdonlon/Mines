@@ -409,9 +409,9 @@ public class Board {
 				if(!board[x][y].isOpened()){
 
 					if(board[x][y].isWrong()){ //draws X
-						g.drawLine(xSpacing+3, ySpacing+3, xSpacing+25, ySpacing+25); //top left/bottom right
-						g.drawLine(xSpacing+25, ySpacing+3, xSpacing+3, ySpacing+25);//top right/bottom left
-						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.drawLine(xSpacing+5, ySpacing+5, xSpacing+23, ySpacing+23); //top left/bottom right
+						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					
 					else if(board[x][y].isFlagged()){
@@ -426,19 +426,19 @@ public class Board {
 
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
-						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
 
 					else
-						g.drawRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 
 				}
 				else{
 
 					if(board[x][y].isBomb()){
 
-						g.drawRect(xSpacing, ySpacing, 28, 28);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
 						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
@@ -456,6 +456,7 @@ public class Board {
 
 						g.setColor(Color.BLACK);
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
 				}
