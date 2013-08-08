@@ -12,6 +12,7 @@ public class Board {
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
 
+	CheckList bombs;
 	Mine board[][];
 	int width;
 	int height;
@@ -30,6 +31,7 @@ public class Board {
 
 	boolean firstTurn = true;
 	boolean touchedBomb = false;
+	boolean speedTrick = false;
 
 
 	public Mine[][] getBoard(){
@@ -56,6 +58,8 @@ public class Board {
 			totalBombs = 99;
 
 		flagCount = totalBombs;
+		
+		bombs = new CheckList();
 	}
 
 	public int getWidth(){
@@ -129,7 +133,7 @@ public class Board {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false); 
+				board[x][y] = new Mine (false, 0, false, false, false, false); 
 
 			}
 		}
@@ -148,7 +152,9 @@ public class Board {
 	}
 
 	public void placeBombs(){
-
+		
+		//bombs = new CheckList();
+		
 		int count = totalBombs;
 
 		while(count > 0){
@@ -157,6 +163,7 @@ public class Board {
 
 			if(!board[rand1][rand2].isBomb() && notSurroundingStart(rand1,rand2)){
 				board[rand1][rand2].setBomb(true);
+				bombs.enque(rand1,rand2);
 				count--;
 			}
 		}
@@ -297,6 +304,15 @@ public class Board {
 
 		}
 	}
+	
+	public void openBomb(){
+		
+			board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
+			bombs.deque();
+			
+		
+	}
+	
 
 	public void openBox(int x, int y){
 
@@ -321,17 +337,19 @@ public class Board {
 
 				touchedBomb = true;
 				lose = true;
+				
+				bombs.enque(x, y);
 
-				for(int i=0; i<height; i++){
-					for(int k=0; k<width; k++){
+//				for(int i=0; i<height; i++){
+//					for(int k=0; k<width; k++){
 
-						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-							board[k][i].setOpened(true);
+//						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+//							board[k][i].setOpened(true);
 
-						else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-							board[k][i].setWrong(true);
-					}
-				}
+//					else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
+//							board[k][i].setWrong(true);
+//					}
+//				}
 
 			}
 
@@ -393,6 +411,11 @@ public class Board {
 
 	public void paintBoard(Graphics g){
 
+		if(speedTrick)
+			g.drawString("", 1, 1);
+		else
+			speedTrick = true;
+		
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
 
@@ -431,6 +454,7 @@ public class Board {
 					}
 
 					else
+						g.drawString("", x, y);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 
 				}
@@ -439,6 +463,10 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						
+//						if(board[x][y].exploded())
+//							g.setColor(Color.RED);
+							
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
 						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
@@ -466,7 +494,7 @@ public class Board {
 			ySpacing+= 30;
 		}
 	}
-
+//stack of bomb locations when initialized then pops and makes that one red (simulating it's being blown up)
 }
 
 

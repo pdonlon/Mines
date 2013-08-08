@@ -11,17 +11,19 @@ public class Mine {
 	int bombsSurrounding;
 	boolean flagged;
 	boolean bomb;
+	boolean explode;
 	boolean wrong;
 
 	int flagCount;
 	int openedCount;
 
-	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean wrong){
+	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean explode, boolean wrong){
 
 		this.opened = opened;
 		this.bombsSurrounding = bs;
 		this.flagged = flagged;
 		this.bomb = bomb;
+		this.explode = explode;
 		this.wrong = wrong;
 
 	}
@@ -66,7 +68,17 @@ public class Mine {
 
 		return bomb;
 	}
+	
+	public boolean exploded(){
+		
+		return explode;
+	}
 
+	public void setExplode(boolean a){
+		
+		explode = a;
+	}
+	
 	public boolean isWrong(){
 
 		return wrong;
