@@ -25,6 +25,35 @@ public class CheckList {
 		return already;
 	}
 
+	public boolean remove(int x, int y){
+		
+		boolean found = false;
+
+		Node pointer = head;
+		Node tempPointer;
+
+		if(head.getXCord()==x && head.getYCord()==y)
+			head = head.next;
+
+		else{
+			
+			while(pointer!=null){
+				
+				tempPointer = pointer.getNext();
+				
+				if(tempPointer!=null && tempPointer.getXCord()==x && tempPointer.getYCord()==y){
+					pointer.setNext(tempPointer.getNext());
+					found = true;
+					break;
+				}
+				
+				pointer = pointer.next;
+			}
+			
+		}
+		return found;
+	}
+
 	public void enque(int x, int y){
 
 		Node entering = new Node(x,y);

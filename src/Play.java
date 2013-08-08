@@ -24,14 +24,13 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		JFrame secret = new JFrame();
 
 		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
-
-
+		
+		
 		Play game = new Play("easy");
 		game.playBoard.initializeBoard();
-
-
+		
 		//JFrame window = new JFrame(""+game.getDifficulty());
-
+		
 
 	}
 
@@ -50,7 +49,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(difficulty.contains("hard")){
 			playBoard = new Board(30,16);
 		}
-
+		
 		Display d = new Display();
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +70,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public boolean gameOver(){
 
 		if(playBoard.getWin() || playBoard.getLose())
-
+			
+			//playBoard.endOfGame();
+			
 			gameOver = true;
 
 		return gameOver;
@@ -106,13 +107,13 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			int y = (e.getY()-30)/30;
 
 			if(SwingUtilities.isLeftMouseButton(e)){
-
-				playBoard.open(x, y);
-
+	
+					playBoard.open(x, y);
+				
 				if(gameOver())
 					gameOverTitle();
 			}
-
+			
 			else if(SwingUtilities.isRightMouseButton(e)){
 
 				playBoard.markFlagged(x, y);
@@ -121,10 +122,10 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		}
 		if(!gameOver){
 			updateFlagTitle();
-			repaint();
-		} else
+		repaint();
+		}
+		else
 			explosion();
-
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -167,25 +168,20 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		setTitle(""+getDifficulty()+"     Flag Count: "+playBoard.getFlagCount());
 
 	}
-
-	public void explosion(){ //BUG
-
-		int bombsLeft = 9;
+	
+	public void explosion(){
 		
+		
+		
+		int bombsLeft = playBoard.getUnflaggedBombCount();
+				
 		while(bombsLeft>0){
-			playBoard.openBomb();
 
-			repaint();
-			bombsLeft--;
-			try {
-				Thread.sleep(40);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		playBoard.openBomb();
+		repaint();
+		bombsLeft--;
 		}
-
-
+		
 	}
 
 	public void gameOverTitle(){

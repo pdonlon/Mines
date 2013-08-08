@@ -14,11 +14,13 @@ public class Board {
 
 	CheckList bombs;
 	Mine board[][];
+	
 	int width;
 	int height;
 
 	int flagCount;
 	int openedBoxCount; 
+	int unflaggedBombCount;
 
 	int totalBombs;
 	int totalBoxes;
@@ -58,6 +60,7 @@ public class Board {
 			totalBombs = 99;
 
 		flagCount = totalBombs;
+		unflaggedBombCount = totalBombs;
 		
 		bombs = new CheckList();
 	}
@@ -105,6 +108,11 @@ public class Board {
 	public boolean getLose(){
 
 		return lose;
+	}
+	
+	public int getUnflaggedBombCount(){
+		
+		return unflaggedBombCount;
 	}
 
 	public boolean flagged(int x, int y){
@@ -340,16 +348,8 @@ public class Board {
 				
 				bombs.enque(x, y);
 
-//				for(int i=0; i<height; i++){
-//					for(int k=0; k<width; k++){
-
-//						if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-//							board[k][i].setOpened(true);
-
-//					else if(!board[k][i].isBomb()&& board[k][i].isFlagged())
-//							board[k][i].setWrong(true);
-//					}
-//				}
+				endOfGame();
+				
 
 			}
 
@@ -364,6 +364,27 @@ public class Board {
 		}
 		if(openedBoxCount == totalBoxes - totalBombs)
 			win = true;
+	}
+	
+	public void endOfGame(){
+		
+		for(int i=0; i<height; i++){
+			for(int k=0; k<width; k++){
+
+				if (!board[k][i].isBomb()&& board[k][i].isFlagged())
+					board[k][i].setWrong(true);
+				
+				else if(board[k][i].isFlagged()){
+					bombs.remove(k,i);
+					unflaggedBombCount--;
+					}
+				
+				else if(board[k][i].isBomb()&&!board[k][i].isFlagged())
+					board[k][i].setOpened(true);
+
+			}
+	}
+		
 	}
 
 
