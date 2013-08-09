@@ -561,7 +561,7 @@ public class Board {
 
 					}
 					else
-						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
 
 					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
 						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
