@@ -24,13 +24,13 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		JFrame secret = new JFrame();
 
 		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
-		
-		
+
+
 		Play game = new Play("hard");
 		game.playBoard.initializeBoard();
-		
+
 		//JFrame window = new JFrame(""+game.getDifficulty());
-		
+
 
 	}
 
@@ -49,7 +49,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(difficulty.contains("hard")){
 			playBoard = new Board(30,16);
 		}
-		
+
 		Display d = new Display();
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,9 +70,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public boolean gameOver(){
 
 		if(playBoard.getWin() || playBoard.getLose())
-			
+
 			//playBoard.endOfGame();
-			
+
 			gameOver = true;
 
 		return gameOver;
@@ -100,42 +100,46 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//TODO 
 		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
-
 		
+		int x = e.getX()/30;
+		int y = (e.getY()-30)/30;
 
-			int x = e.getX()/30;
-			int y = (e.getY()-30)/30;
+		if(SwingUtilities.isLeftMouseButton(e)){
 
-			if(SwingUtilities.isLeftMouseButton(e)){
-				
-				if(gameOver)
-					resetGame();
-	
-				else
-					playBoard.open(x, y);
-				
-				if(gameOver())
-					gameOverTitle();
+			if(gameOver)
+				resetGame();
+
+			else
+				playBoard.open(x, y);
+
+		}
+		if(!gameOver()){
+
+			if(!playBoard.getFirstTurn()){
+				if(e.getClickCount() == 2)	{
+
+					if(playBoard.unopenedAround(x, y))
+						playBoard.fastClick(x,y);
+					if(gameOver())
+						gameOverTitle();
+
+				}
 			}
-			if(!gameOver()){
-			
-			if(e.getClickCount() == 2)	{
-				
-				if(playBoard.unopenedAround(x, y))
-					playBoard.fastClick(x,y);
-				
-			}
-				
-			else if(SwingUtilities.isRightMouseButton(e)){
+
+			if(SwingUtilities.isRightMouseButton(e)){
 
 				playBoard.markFlagged(x, y);
 			}
-
+		if(!gameOver)
 			updateFlagTitle();
-		repaint();
+
 		}
 		else
+			gameOverTitle();
+		if(playBoard.lose)
 			explosion();
+
+		repaint();
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -178,27 +182,27 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		setTitle(""+getDifficulty()+"     Flag Count: "+playBoard.getFlagCount());
 
 	}
-	
+
 	public void resetGame(){
-		
+
 		playBoard.startup();
 		playBoard.wipeBoard();
 		gameOver = false;
-		
+
 		repaint();
 	}
-	
+
 	public void explosion(){
-		
+
 		int bombsLeft = playBoard.getUnflaggedBombCount();
-				
+
 		while(bombsLeft>0){
 
-		playBoard.openBomb();
-		repaint();
-		bombsLeft--;
+			playBoard.openBomb();
+			repaint();
+			bombsLeft--;
 		}
-		
+
 	}
 
 	public void gameOverTitle(){

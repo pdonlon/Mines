@@ -112,6 +112,11 @@ public class Board {
 		return lose;
 	}
 	
+	public boolean getFirstTurn(){
+		
+		return firstTurn;
+	}
+	
 	public int getUnflaggedBombCount(){
 		
 		return unflaggedBombCount;
