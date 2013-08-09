@@ -15,7 +15,7 @@ public class Board {
 	CheckList bombs;
 	Mine board[][];
 	
-	int width;
+	int width; 
 	int height;
 
 	int flagCount;
@@ -115,6 +115,36 @@ public class Board {
 	public int getUnflaggedBombCount(){
 		
 		return unflaggedBombCount;
+	}
+	
+	public void wipeBoard(){
+		
+		for(int y=0; y<height; y++ ){
+			for(int x=0; x<width; x++){
+			
+				board[x][y] = new Mine (false, 0, false, false, false, false);
+				
+			}
+		}
+		
+	}
+	
+	public void startup(){
+		
+		bombs.empty();
+		
+		openedBoxCount=0; 
+
+		flagCount = totalBombs;
+		unflaggedBombCount = totalBombs;
+		flagLimit=flagCount;
+
+		win = false;
+		lose = false;
+
+		firstTurn = true;
+		touchedBomb = false;
+		
 	}
 
 	public boolean flagged(int x, int y){

@@ -101,26 +101,29 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		//TODO 
 		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
 
-		if(!gameOver()){
+		
 
 			int x = e.getX()/30;
 			int y = (e.getY()-30)/30;
 
 			if(SwingUtilities.isLeftMouseButton(e)){
+				
+				if(gameOver)
+					resetGame();
 	
+				else
 					playBoard.open(x, y);
 				
 				if(gameOver())
 					gameOverTitle();
 			}
-			
-			else if(SwingUtilities.isRightMouseButton(e)){
+			if(!gameOver()){
+				
+			if(SwingUtilities.isRightMouseButton(e)){
 
 				playBoard.markFlagged(x, y);
 			}
 
-		}
-		if(!gameOver){
 			updateFlagTitle();
 		repaint();
 		}
@@ -169,9 +172,16 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	}
 	
+	public void resetGame(){
+		
+		playBoard.startup();
+		playBoard.wipeBoard();
+		gameOver = false;
+		
+		repaint();
+	}
+	
 	public void explosion(){
-		
-		
 		
 		int bombsLeft = playBoard.getUnflaggedBombCount();
 				

@@ -99,6 +99,12 @@ public class CheckList {
 		head = head.getNext();
 
 	}
+	
+	public void empty(){
+		
+		head = null;
+	}
+	
 }
 
 class Node{
