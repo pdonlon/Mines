@@ -570,7 +570,7 @@ public class Board {
 
 						g.setColor(Color.BLACK);
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						//g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
 				}
