@@ -100,7 +100,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//TODO 
 		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
-		
+
 		int x = e.getX()/30;
 		int y = (e.getY()-30)/30;
 
@@ -118,8 +118,13 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			if(!playBoard.getFirstTurn()){
 				if(e.getClickCount() == 2)	{
 
-					if(playBoard.unopenedAround(x, y))
+					if(playBoard.getStartX()==x && playBoard.getStartY()==y)
+
+						resetGame();
+
+					else if(playBoard.unopenedAround(x, y))
 						playBoard.fastClick(x,y);
+
 					if(gameOver())
 						gameOverTitle();
 
@@ -130,15 +135,17 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 				playBoard.markFlagged(x, y);
 			}
-		if(!gameOver)
-			updateFlagTitle();
+			if(!gameOver)
+				updateFlagTitle();
 
 		}
 		else
 			gameOverTitle();
-		if(playBoard.lose)
-			explosion();
+		if(playBoard.lose){
 
+			anonymous();
+
+		}
 		repaint();
 	}
 
@@ -177,6 +184,32 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	}
 
+	public void anonymous(){
+
+		Thread t = new Thread( new Runnable(){
+			public void run(){
+
+				int bombsLeft = playBoard.getUnsafeBombCount()-1;
+
+				while(bombsLeft>0){
+
+					try {
+						Thread.sleep(60);
+					} catch(InterruptedException ex) {
+						Thread.currentThread().interrupt();
+					}
+
+					explosion();
+
+					bombsLeft--;
+				}
+			}
+		});
+
+		t.start();
+
+	}
+
 	public void updateFlagTitle(){
 
 		setTitle(""+getDifficulty()+"     Flag Count: "+playBoard.getFlagCount());
@@ -194,16 +227,10 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void explosion(){
 
-		int bombsLeft = playBoard.getUnflaggedBombCount();
-
-		while(bombsLeft>0){
-
-			playBoard.openBomb();
-			repaint();
-			bombsLeft--;
-		}
-
+		playBoard.openBomb();
+		repaint();
 	}
+
 
 	public void gameOverTitle(){
 

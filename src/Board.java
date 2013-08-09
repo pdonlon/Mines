@@ -14,13 +14,13 @@ public class Board {
 
 	CheckList bombs;
 	Mine board[][];
-	
+
 	int width; 
 	int height;
 
 	int flagCount;
 	int openedBoxCount; 
-	int unflaggedBombCount;
+	int unsafeBombCount;
 
 	int flagLimit;
 	int totalBombs;
@@ -61,9 +61,9 @@ public class Board {
 			totalBombs = 99;
 
 		flagCount = totalBombs;
-		unflaggedBombCount = totalBombs;
+		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
-		
+
 		bombs = new CheckList();
 	}
 
@@ -111,37 +111,48 @@ public class Board {
 
 		return lose;
 	}
-	
+
 	public boolean getFirstTurn(){
-		
+
 		return firstTurn;
 	}
-	
-	public int getUnflaggedBombCount(){
-		
-		return unflaggedBombCount;
+
+	public int getStartX(){
+
+		return startX;
 	}
-	
+
+	public int getStartY(){
+
+		return startY;
+	}
+
+
+	public int getUnsafeBombCount(){
+
+		return unsafeBombCount;
+	}
+
 	public void wipeBoard(){
-		
+
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
-			
+
 				board[x][y] = new Mine (false, 0, false, false, false, false);
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	public void startup(){
-		
+
 		bombs.empty();
-		
+
 		openedBoxCount=0; 
 
 		flagCount = totalBombs;
-		unflaggedBombCount = totalBombs;
+		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
 
 		win = false;
@@ -149,7 +160,7 @@ public class Board {
 
 		firstTurn = true;
 		touchedBomb = false;
-		
+
 	}
 
 	public boolean flagged(int x, int y){
@@ -197,9 +208,9 @@ public class Board {
 	}
 
 	public void placeBombs(){
-		
+
 		//bombs = new CheckList();
-		
+
 		int count = totalBombs;
 
 		while(count > 0){
@@ -248,33 +259,37 @@ public class Board {
 	}
 
 	public boolean unopenedAround(int x, int y){
-		
+
 		boolean unopened = false;
-		
+
 		for(int i=-1; i<2; i++){			
 			for(int j=-1; j<2; j++){
-			
-				if(!board[x+j][y+i].isOpened())
+
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened())
 					unopened = true;
-				
+
 			}
 		}
-		
+
 		return unopened;
 	}
-	
+
 	public void fastClick(int x, int y){
-		
+
 		for(int i=-1; i<2; i++){			
 			for(int j=-1; j<2; j++){
-			
-				if(!board[x+j][y+i].isOpened()&&!board[x+j][y+i].isFlagged())
-					openBox(x+j,y+i);
-				
+
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
+					
+//					if(board[x+j][y+i].isBomb())
+//						bombs.remove(x+j,y+i);
+					
+				openBox(x+j,y+i);	
+				}
 			}
 		}
 	}
-	
+
 	public void openZeros(int x, int y){
 
 		int tempX = x;
@@ -377,15 +392,20 @@ public class Board {
 
 		}
 	}
-	
+
 	public void openBomb(){
+
+		if(board[bombs.getValues()[0]][bombs.getValues()[1]].isBomb())
+		board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
 		
-			board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
-			bombs.deque();
-			
+//		else
+//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
 		
+		bombs.deque();
+
+
 	}
-	
+
 
 	public void openBox(int x, int y){
 
@@ -401,55 +421,56 @@ public class Board {
 
 		}
 		else{
-			
+
 			if(!board[x][y].isOpened()){
 
-			board[x][y].setOpened(true);
+				board[x][y].setOpened(true);
 
-			if(board[x][y].isBomb()){
+				if(board[x][y].isBomb()){
 
-				touchedBomb = true;
-				lose = true;
-				
-				bombs.enque(x, y);
+					touchedBomb = true;
+					lose = true;
 
-				endOfGame();
-				
+					bombs.remove(x,y); //so it won't print twice
+					bombs.enque(x, y); //first to print
 
-			}
+					endOfGame();
 
-			else if(board[x][y].getBombsSurrounding()==0){
-				openedBoxCount++;
-				openZeros(x, y);
 
-			}
-			else
-				openedBoxCount++;
+				}
+
+				else if(board[x][y].getBombsSurrounding()==0){
+					openedBoxCount++;
+					openZeros(x, y);
+
+				}
+				else
+					openedBoxCount++;
 			}
 		}
 		if(openedBoxCount == totalBoxes - totalBombs)
 			win = true;
 	}
-	
+
 	public void endOfGame(){
-		
+
 		for(int i=0; i<height; i++){
 			for(int k=0; k<width; k++){
 
-				if (!board[k][i].isBomb()&& board[k][i].isFlagged())
-					board[k][i].setWrong(true);
 				
-				else if(board[k][i].isFlagged()){
+
+				if(board[k][i].isFlagged()&&board[k][i].isBomb()){
 					bombs.remove(k,i);
-					unflaggedBombCount--;
-					}
-				
-				else if(board[k][i].isBomb()&&!board[k][i].isFlagged())
-					board[k][i].setOpened(true);
+					unsafeBombCount--;
+				}
+
+				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
+					board[k][i].setWrong(true);
+				}
 
 			}
-	}
-		
+		}
+
 	}
 
 
@@ -501,7 +522,7 @@ public class Board {
 			g.drawString("", 1, 1);
 		else
 			speedTrick = true;
-		
+
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
 
@@ -522,7 +543,7 @@ public class Board {
 						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
-					
+
 					else if(board[x][y].isFlagged()){
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
@@ -541,7 +562,7 @@ public class Board {
 
 					else
 						g.drawString("", x, y);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+					g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 
 				}
 				else{
@@ -549,10 +570,10 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
-						
-//						if(board[x][y].exploded())
-//							g.setColor(Color.RED);
-							
+
+						//						if(board[x][y].exploded())
+						//							g.setColor(Color.RED);
+
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
 						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
@@ -561,7 +582,7 @@ public class Board {
 
 					}
 					else
-						g.fillRect(xSpacing+22, ySpacing+2, 26, 26);
+						g.fillRect(xSpacing+2, ySpacing+2, 26, 26);
 
 					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
 						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
@@ -580,7 +601,7 @@ public class Board {
 			ySpacing+= 30;
 		}
 	}
-//stack of bomb locations when initialized then pops and makes that one red (simulating it's being blown up)
+	//stack of bomb locations when initialized then pops and makes that one red (simulating it's being blown up)
 }
 
 
