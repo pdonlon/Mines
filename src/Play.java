@@ -118,8 +118,15 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 					gameOverTitle();
 			}
 			if(!gameOver()){
+			
+			if(e.getClickCount() == 2)	{
 				
-			if(SwingUtilities.isRightMouseButton(e)){
+				if(playBoard.unopenedAround(x, y))
+					playBoard.fastClick(x,y);
+				
+			}
+				
+			else if(SwingUtilities.isRightMouseButton(e)){
 
 				playBoard.markFlagged(x, y);
 			}

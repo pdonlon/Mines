@@ -242,6 +242,34 @@ public class Board {
 		return valid;
 	}
 
+	public boolean unopenedAround(int x, int y){
+		
+		boolean unopened = false;
+		
+		for(int i=-1; i<2; i++){			
+			for(int j=-1; j<2; j++){
+			
+				if(!board[x+j][y+i].isOpened())
+					unopened = true;
+				
+			}
+		}
+		
+		return unopened;
+	}
+	
+	public void fastClick(int x, int y){
+		
+		for(int i=-1; i<2; i++){			
+			for(int j=-1; j<2; j++){
+			
+				if(!board[x+j][y+i].isOpened()&&!board[x+j][y+i].isFlagged())
+					openBox(x+j,y+i);
+				
+			}
+		}
+	}
+	
 	public void openZeros(int x, int y){
 
 		int tempX = x;
