@@ -22,6 +22,7 @@ public class Board {
 	int openedBoxCount; 
 	int unflaggedBombCount;
 
+	int flagLimit;
 	int totalBombs;
 	int totalBoxes;
 
@@ -61,6 +62,7 @@ public class Board {
 
 		flagCount = totalBombs;
 		unflaggedBombCount = totalBombs;
+		flagLimit=flagCount;
 		
 		bombs = new CheckList();
 	}
@@ -303,7 +305,7 @@ public class Board {
 
 	public void removeFlag(int x, int y){
 
-		if(flagCount<11){
+		if(flagCount<flagLimit){
 
 			board[x][y].setFlagged(false);
 
