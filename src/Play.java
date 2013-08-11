@@ -25,8 +25,20 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
 
+//		Display d = new Display();
+//		//setTitle();
+//		newGameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		newGameWindow.add(d);
+//		newGameWindow.setSize(500,500);
+//		newGameWindow.setVisible(true);
+//		newGameWindow.setResizable(false);
 
-		Play game = new Play("hard");
+		//this.addMouseListener(this);
+		
+		
+		
+
+		Play game = new Play("medium");
 		game.playBoard.initializeBoard();
 
 		//JFrame window = new JFrame(""+game.getDifficulty());
@@ -54,7 +66,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(d);
-		this.setSize(30*this.playBoard.getWidth()+5,30*this.playBoard.getHeight()+25);
+		this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23);
 		this.setVisible(true);
 		this.setResizable(false);
 
@@ -94,6 +106,16 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void mouseClicked(MouseEvent e) {
 
+		
+	}
+
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void mouseReleased(MouseEvent e) {
+
 
 		//TODO
 		//after game over left click and new game starts
@@ -101,8 +123,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		//TODO 
 		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
 
-		int x = e.getX()/30;
-		int y = (e.getY()-30)/30;
+		int x = e.getX()/27;
+		int y = (e.getY()-27)/27;
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
@@ -115,7 +137,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		}
 		if(!gameOver()){
 
-			if(!playBoard.getFirstTurn()){
+			if(!playBoard.getFirstTurn()&&SwingUtilities.isLeftMouseButton(e)){
 				if(e.getClickCount() == 2)	{
 
 					if(playBoard.getStartX()==x && playBoard.getStartY()==y)
@@ -147,15 +169,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		}
 		repaint();
-	}
-
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -189,7 +202,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		Thread t = new Thread( new Runnable(){
 			public void run(){
 
-				int bombsLeft = playBoard.getUnsafeBombCount()-1;
+				int bombsLeft = playBoard.getTotalBombs()-1;
+				
 
 				while(bombsLeft>0){
 

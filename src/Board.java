@@ -281,8 +281,8 @@ public class Board {
 
 				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
 					
-//					if(board[x+j][y+i].isBomb())
-//						bombs.remove(x+j,y+i);
+					if(board[x+j][y+i].isBomb())
+						bombs.remove(x+j,y+i);
 					
 				openBox(x+j,y+i);	
 				}
@@ -308,12 +308,13 @@ public class Board {
 			for(int i=-1; i<2; i++){			
 				for(int j=-1; j<2; j++){
 
-					if((isValid(tempX+i,tempY+j))&& 
-							(!full.alreadyInFullList(tempX+i, tempY+j))&&
-							(!board[tempX+i][tempY+j].isOpened())){
+					if(isValid(tempX+i,tempY+j)&& 
+							!full.alreadyInFullList(tempX+i, tempY+j)&&
+							!board[tempX+i][tempY+j].isOpened()&&
+							!board[tempX+i][tempY+j].isFlagged()){
 
-						if(board[tempX+i][tempY+j].isFlagged())
-							removeFlag(tempX+i,tempY+j);
+//						if(board[tempX+i][tempY+j].isFlagged())
+//							removeFlag(tempX+i,tempY+j);
 
 						board[tempX+i][tempY+j].setOpened(true);
 						openedBoxCount++;
@@ -461,7 +462,7 @@ public class Board {
 
 				if(board[k][i].isFlagged()&&board[k][i].isBomb()){
 					bombs.remove(k,i);
-					unsafeBombCount--;
+//					unsafeBombCount--;
 				}
 
 				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
@@ -525,12 +526,13 @@ public class Board {
 
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
+				
 
-		int ySpacing = 2;
+		int ySpacing = 0;
 
 		for(int y=0; y<height; y++){
 
-			int xSpacing = 3;
+			int xSpacing = 0;
 
 			for(int x=0; x<width; x++){
 
@@ -545,6 +547,13 @@ public class Board {
 					}
 
 					else if(board[x][y].isFlagged()){
+						
+						int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
+						int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
+						
+						int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
+						int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
+						
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
 
@@ -553,23 +562,52 @@ public class Board {
 
 						xArray[2] = xSpacing+10; //bottom right
 						yArray[2] = ySpacing+16;
+						
+						g.setColor(Color.LIGHT_GRAY);
+						g.fillPolygon(xLightTri, yLightTri, 3);
+						
+						g.setColor(Color.BLACK);
+						g.fillPolygon(xDarkTri, yDarkTri, 3);
+						
+						g.setColor(Color.GRAY);
+						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
 
+						g.setColor(Color.RED);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
 
-					else
-						g.drawString("", x, y);
-					g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+					else{
+					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
+					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
+					
+					int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
+					int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
+						
+					g.setColor(Color.LIGHT_GRAY);
+					g.fillPolygon(xLightTri, yLightTri, 3);
+					
+					g.setColor(Color.BLACK);
+					g.fillPolygon(xDarkTri, yDarkTri, 3);
+					
+					g.setColor(Color.GRAY);
+					g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
+						
+					//g.drawString("", x, y);
+//					g.fillRect(xSpacing+1, ySpacing+13, 27, 15);
+//					g.setColor(Color.WHITE);
+//					g.fillRect(xSpacing+1, ySpacing+1, 26, 23);
+//					g.setColor(Color.BLACK);
+//					g.drawRect(xSpacing+1, ySpacing+1, 26, 22);
+					}
 
 				}
 				else{
 
 					if(board[x][y].isBomb()){
-
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						
+						
 
 						//						if(board[x][y].exploded())
 						//							g.setColor(Color.RED);
@@ -579,26 +617,32 @@ public class Board {
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
 						g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
 						g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
-
+						
+						g.setColor(Color.WHITE);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
-					else
-						g.fillRect(xSpacing+2, ySpacing+2, 26, 26);
+					else if(board[x][y].getBombsSurrounding()==0){
+						g.setColor(Color.LIGHT_GRAY);
+						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.setColor(Color.GRAY);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+					}
 
-					if(board[x][y].getBombsSurrounding()>0){ //shouldn't print 0
-						//Font obj= new Font("<font name"> , Font.<style>,<size int type>);
+					else{ 
+						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 						Font font = new Font("SANS_SERIF", Font.BOLD,10); 
 						g.setFont(font);
-
 						g.setColor(Color.BLACK);
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
-						//g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.setColor(Color.GRAY);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
 				}
 
-				xSpacing += 30;
+				xSpacing += 27;
 			}
-			ySpacing+= 30;
+			ySpacing+= 27;
 		}
 	}
 	//stack of bomb locations when initialized then pops and makes that one red (simulating it's being blown up)
