@@ -540,7 +540,7 @@ public class Board {
 
 				if(!board[x][y].isOpened()){
 
-					if(board[x][y].isWrong()){ //draws X
+					if(board[x][y].isWrong()){ //draws X					
 						g.drawLine(xSpacing+5, ySpacing+5, xSpacing+23, ySpacing+23); //top left/bottom right
 						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
@@ -608,22 +608,19 @@ public class Board {
 					if(board[x][y].isBomb()){
 						
 						
-
-						//						if(board[x][y].exploded())
-						//							g.setColor(Color.RED);
-
+						
+						g.setColor(Color.BLACK);
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
 						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
 						g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
 						g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
 						
-						g.setColor(Color.WHITE);
+						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-						g.setColor(Color.LIGHT_GRAY);
-						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}

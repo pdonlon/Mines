@@ -95,7 +95,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		public void paintComponent(Graphics g){
 
 			super.paintComponent(g);
-			this.setBackground(Color.WHITE);
+			this.setBackground(Color.LIGHT_GRAY);
 
 			playBoard.paintBoard(g);
 
