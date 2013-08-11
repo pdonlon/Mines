@@ -154,9 +154,13 @@ public class Board {
 	
 	public void resetPressed(){
 		
+		try{
 		if(pressed.getHead()!=null)
 			board[pressed.getHead().getXCord()][pressed.getHead().getYCord()].setPressed(false);
-		
+		}
+		catch(Exception e){
+			
+		}
 	}
 
 	public int getUnsafeBombCount(){
@@ -320,6 +324,18 @@ public class Board {
 			}
 		}
 	}
+	
+	public void finishFlagging(){
+		
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+				
+				if(!board[x][y].isOpened()&&!board[x][y].flagged)
+					board[x][y].setFlagged(true);
+			}
+		}
+		
+	}
 
 	public void openZeros(int x, int y){
 
@@ -381,7 +397,7 @@ public class Board {
 
 		}
 
-		else if(flagCount>0 && !board[x][y].isOpened()){
+		else if(!board[x][y].isOpened()){ //flagCount>0 && 
 
 			board[x][y].setFlagged(true);
 
@@ -437,6 +453,21 @@ public class Board {
 
 
 	}
+	
+	public boolean isEmpty(){
+		
+		boolean empty = false;
+		
+		try{
+			if(pressed.getHead()==null)
+				empty = true;
+		}
+		catch(Exception e){
+			
+		}
+		
+		return empty;
+	}
 
 
 	public void openBox(int x, int y){
@@ -480,8 +511,13 @@ public class Board {
 					openedBoxCount++;
 			}
 		}
-		if(openedBoxCount == totalBoxes - totalBombs)
+		if(openedBoxCount == totalBoxes - totalBombs){
 			win = true;
+		if(flagCount >0){
+			finishFlagging();
+		}
+			
+		}
 	}
 
 	public void endOfGame(){

@@ -38,7 +38,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		
 		
 
-		Play game = new Play("hard");
+		Play game = new Play("easy");
 		game.playBoard.initializeBoard();
 
 		//JFrame window = new JFrame(""+game.getDifficulty());
@@ -84,8 +84,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(playBoard.getWin() || playBoard.getLose())
 
-			//playBoard.endOfGame();
-
 			gameOver = true;
 
 		return gameOver;
@@ -112,18 +110,22 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void mousePressed(MouseEvent e) {
 		
+		if(SwingUtilities.isLeftMouseButton(e)){
+		
 		int x = e.getX()/27;
 		int y = (e.getY()-27)/27;
 		
 		playBoard.add(x, y);
 		playBoard.press(x,y);
 		repaint();
+		}
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
 
-		playBoard.resetPressed();
+		if(!playBoard.isEmpty())
+			playBoard.resetPressed();
 
 		int x = e.getX()/27;
 		int y = (e.getY()-27)/27;
@@ -191,8 +193,12 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void mouseDragged(MouseEvent e) {
 		
+		if(SwingUtilities.isLeftMouseButton(e)){
+		
 		int x = e.getX()/27;
 		int y = (e.getY()-27)/27;
+		
+		
 		
 		repaint();
 		
@@ -203,6 +209,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			repaint();
 		}
 		repaint();
+		}
 	}
 
 	public void mouseMoved(MouseEvent e) {
