@@ -13,11 +13,12 @@ public class Mine {
 	boolean bomb;
 	boolean explode;
 	boolean wrong;
+	boolean pressed;
 
 	int flagCount;
 	int openedCount;
 
-	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean explode, boolean wrong){
+	public Mine(boolean opened, int bs, boolean flagged, boolean bomb, boolean explode, boolean wrong, boolean pressed){
 
 		this.opened = opened;
 		this.bombsSurrounding = bs;
@@ -25,6 +26,7 @@ public class Mine {
 		this.bomb = bomb;
 		this.explode = explode;
 		this.wrong = wrong;
+		this.pressed = pressed;
 
 	}
 
@@ -87,6 +89,16 @@ public class Mine {
 	public void setWrong(boolean a){
 
 		wrong = a;
+	}
+	
+	public boolean beingPressed(){
+		
+		return pressed;
+	}
+	
+	public void setPressed(boolean a){
+		
+		pressed = a;
 	}
 
 	public Color determineColor(){

@@ -66,6 +66,27 @@ public class CheckList {
 		if(head == null)
 			head = entering;
 	}
+	
+	public void replaceHead(int x, int y){
+		
+		Node replacement = new Node(x,y);
+		
+		head = replacement;
+		
+	}
+	
+	public boolean alreadyHead(int x, int y){
+		
+		boolean already = false;
+		
+		Node check = new Node(x,y);
+		
+		if(head == check)
+			already = true;
+		
+		return already;
+		
+	}
 
 	public int[] getValues(){
 

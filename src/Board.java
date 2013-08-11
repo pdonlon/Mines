@@ -11,7 +11,8 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-
+	
+	CheckList pressed;
 	CheckList bombs;
 	Mine board[][];
 
@@ -126,7 +127,37 @@ public class Board {
 
 		return startY;
 	}
-
+	
+	public boolean alreadyThere(int x, int y){
+		
+		return pressed.alreadyHead(x, y);
+		
+	}
+	
+	public void replace(int x, int y){
+		
+		pressed.replaceHead(x, y);
+		
+	}
+	
+	public void add(int x, int y){
+		
+		pressed = new CheckList();
+			pressed.enque(x, y);
+		
+	}
+	
+	public void press(int x, int y){
+		
+		board[x][y].setPressed(true);
+	}
+	
+	public void resetPressed(){
+		
+		if(pressed.getHead()!=null)
+			board[pressed.getHead().getXCord()][pressed.getHead().getYCord()].setPressed(false);
+		
+	}
 
 	public int getUnsafeBombCount(){
 
@@ -138,7 +169,7 @@ public class Board {
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false);
+				board[x][y] = new Mine (false, 0, false, false, false, false, false);
 
 			}
 		}
@@ -189,7 +220,7 @@ public class Board {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false); 
+				board[x][y] = new Mine (false, 0, false, false, false, false, false); 
 
 			}
 		}
@@ -577,7 +608,12 @@ public class Board {
 						g.setColor(Color.BLACK);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
-
+					
+					else if(board[x][y].beingPressed()){
+						g.setColor(Color.GRAY);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						}
+					
 					else{
 					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
 					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
@@ -635,6 +671,12 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
+//					if(x==startX&&y==startY){
+//						g.setColor(Color.YELLOW);
+//						g.fillOval(xSpacing+5, ySpacing+5, 18, 18);
+//						
+//					}
+					
 				}
 
 				xSpacing += 27;

@@ -38,7 +38,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		
 		
 
-		Play game = new Play("medium");
+		Play game = new Play("hard");
 		game.playBoard.initializeBoard();
 
 		//JFrame window = new JFrame(""+game.getDifficulty());
@@ -71,6 +71,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		this.setResizable(false);
 
 		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 
 	}
 
@@ -110,21 +111,24 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	}
 
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
+		int x = e.getX()/27;
+		int y = (e.getY()-27)/27;
+		
+		playBoard.add(x, y);
+		playBoard.press(x,y);
+		repaint();
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
 
-
-		//TODO
-		//after game over left click and new game starts
-
-		//TODO 
-		//make window popup asking if they want an easy, medium, or hard game --- closes --- opens game
+		playBoard.resetPressed();
 
 		int x = e.getX()/27;
 		int y = (e.getY()-27)/27;
+		
+		if(playBoard.isValid(x, y)){
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
@@ -169,6 +173,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		}
 		repaint();
+		}
 
 	}
 
@@ -178,13 +183,26 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	}
 
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
+		playBoard.resetPressed();
+		repaint();
 
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
+		int x = e.getX()/27;
+		int y = (e.getY()-27)/27;
+		
+		repaint();
+		
+		if(!playBoard.alreadyThere(x,y)&&playBoard.isValid(x, y)){
+			playBoard.resetPressed();
+			playBoard.replace(x, y);
+			playBoard.press(x,y);
+			repaint();
+		}
+		repaint();
 	}
 
 	public void mouseMoved(MouseEvent e) {
