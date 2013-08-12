@@ -21,25 +21,15 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public static void main(String[] args) {
 
-		JFrame secret = new JFrame();
+		//JFrame secret = new JFrame();
 
-		JFrame newGameWindow = new JFrame("MINESWEEPER: CHOOSE A DIFFICULTY");
-
-//		Display d = new Display();
-//		//setTitle();
-//		newGameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		newGameWindow.add(d);
-//		newGameWindow.setSize(500,500);
-//		newGameWindow.setVisible(true);
-//		newGameWindow.setResizable(false);
-
-		//this.addMouseListener(this);
-		
-		
+		//Menu newGameWindow = new Menu();
 		
 
-		Play game = new Play("easy");
+		Play game = new Play("ANUS");
 		game.playBoard.initializeBoard();
+		
+		//String path = JOptionPane.showInputDialog("Pop up message text here");
 
 		//JFrame window = new JFrame(""+game.getDifficulty());
 
@@ -49,20 +39,44 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public Play(String difficulty){
 
 		this.difficulty = difficulty;
-
-		if(difficulty.contains("easy")){
+		
+		if(difficulty.contains("EASY")){
 			playBoard = new Board(8,8);
+			playBoard.setTotalBombs(10);
+			
 		}
 
-		if(difficulty.contains("medium")){
+		else if(difficulty.contains("MEDIUM")){
 			playBoard = new Board(16,16);
+			playBoard.setTotalBombs(40);
 		}
 
-		if(difficulty.contains("hard")){
+		else if(difficulty.contains("HARD")){
 			playBoard = new Board(30,16);
+			playBoard.setTotalBombs(99);
 		}
+		
+		else{
+			//TODO
+			
+			this.setDifficulty("CUSTOM");
+			
+			String x = JOptionPane.showInputDialog("Desired width of your board");
+			int width = Integer.parseInt(x);
+			
+			String y = JOptionPane.showInputDialog("Desired height of your board");
+			int height = Integer.parseInt(y);
+			
+			String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
+			int totalBombs = Integer.parseInt(bombs);
+			
+			playBoard = new Board(width,height);
+			playBoard.setTotalBombs(totalBombs);
+		}
+		
+		playBoard.setUp();
 
-		Display d = new Display();
+		GameDisplay d = new GameDisplay();
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(d);
@@ -73,11 +87,17 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 
+		//this.playBoard.initializeBoard();
 	}
 
 	public String getDifficulty(){
 
 		return difficulty;
+	}
+	
+	public void setDifficulty(String a){
+		
+		difficulty = a;
 	}
 
 	public boolean gameOver(){
@@ -89,7 +109,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		return gameOver;
 	}
 
-	public class Display extends JPanel{
+
+	public class GameDisplay extends JPanel{
 
 		public void paintComponent(Graphics g){
 
@@ -113,7 +134,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(SwingUtilities.isLeftMouseButton(e)){
 		
 		int x = e.getX()/27;
-		int y = (e.getY()-27)/27;
+		int y = (e.getY()-26)/27;
 		
 		playBoard.add(x, y);
 		playBoard.press(x,y);
@@ -180,7 +201,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -196,7 +217,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(SwingUtilities.isLeftMouseButton(e)){
 		
 		int x = e.getX()/27;
-		int y = (e.getY()-27)/27;
+		int y = (e.getY()-26)/27;
 		
 		
 		
@@ -213,12 +234,12 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 

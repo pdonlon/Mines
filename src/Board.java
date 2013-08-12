@@ -11,7 +11,7 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-	
+
 	CheckList pressed;
 	CheckList bombs;
 	Mine board[][];
@@ -52,15 +52,6 @@ public class Board {
 
 		totalBoxes = width*height;
 
-		if(width == 8)
-			totalBombs = 10;
-
-		else if(width == 16)
-			totalBombs = 40;
-
-		else
-			totalBombs = 99;
-
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
@@ -86,6 +77,11 @@ public class Board {
 	public int getTotalBombs(){
 
 		return totalBombs;
+	}
+
+	public void setTotalBombs(int a){
+
+		totalBombs = a;
 	}
 
 	public int getTotalBoxes(){
@@ -128,38 +124,46 @@ public class Board {
 		return startY;
 	}
 	
+	public void setUp(){
+	
+		flagCount = totalBombs;
+		unsafeBombCount = totalBombs;
+		flagLimit=flagCount;
+		
+	}
+
 	public boolean alreadyThere(int x, int y){
-		
+
 		return pressed.alreadyHead(x, y);
-		
+
 	}
-	
+
 	public void replace(int x, int y){
-		
+
 		pressed.replaceHead(x, y);
-		
+
 	}
-	
+
 	public void add(int x, int y){
-		
+
 		pressed = new CheckList();
-			pressed.enque(x, y);
-		
+		pressed.enque(x, y);
+
 	}
-	
+
 	public void press(int x, int y){
-		
+
 		board[x][y].setPressed(true);
 	}
-	
+
 	public void resetPressed(){
-		
+
 		try{
-		if(pressed.getHead()!=null)
-			board[pressed.getHead().getXCord()][pressed.getHead().getYCord()].setPressed(false);
+			if(pressed.getHead()!=null)
+				board[pressed.getHead().getXCord()][pressed.getHead().getYCord()].setPressed(false);
 		}
 		catch(Exception e){
-			
+
 		}
 	}
 
@@ -315,26 +319,26 @@ public class Board {
 			for(int j=-1; j<2; j++){
 
 				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
-					
+
 					if(board[x+j][y+i].isBomb())
 						bombs.remove(x+j,y+i);
-					
-				openBox(x+j,y+i);	
+
+					openBox(x+j,y+i);	
 				}
 			}
 		}
 	}
-	
+
 	public void finishFlagging(){
-		
+
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
-				
+
 				if(!board[x][y].isOpened()&&!board[x][y].flagged)
 					board[x][y].setFlagged(true);
 			}
 		}
-		
+
 	}
 
 	public void openZeros(int x, int y){
@@ -360,8 +364,8 @@ public class Board {
 							!board[tempX+i][tempY+j].isOpened()&&
 							!board[tempX+i][tempY+j].isFlagged()){
 
-//						if(board[tempX+i][tempY+j].isFlagged())
-//							removeFlag(tempX+i,tempY+j);
+						//						if(board[tempX+i][tempY+j].isFlagged())
+						//							removeFlag(tempX+i,tempY+j);
 
 						board[tempX+i][tempY+j].setOpened(true);
 						openedBoxCount++;
@@ -444,28 +448,28 @@ public class Board {
 	public void openBomb(){
 
 		if(board[bombs.getValues()[0]][bombs.getValues()[1]].isBomb())
-		board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
-		
-//		else
-//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
-		
+			board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
+
+		//		else
+		//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
+
 		bombs.deque();
 
 
 	}
-	
+
 	public boolean isEmpty(){
-		
+
 		boolean empty = false;
-		
+
 		try{
 			if(pressed.getHead()==null)
 				empty = true;
 		}
 		catch(Exception e){
-			
+
 		}
-		
+
 		return empty;
 	}
 
@@ -513,10 +517,10 @@ public class Board {
 		}
 		if(openedBoxCount == totalBoxes - totalBombs){
 			win = true;
-		if(flagCount >0){
-			finishFlagging();
-		}
-			
+			if(flagCount >0){
+				finishFlagging();
+			}
+
 		}
 	}
 
@@ -525,11 +529,11 @@ public class Board {
 		for(int i=0; i<height; i++){
 			for(int k=0; k<width; k++){
 
-				
+
 
 				if(board[k][i].isFlagged()&&board[k][i].isBomb()){
 					bombs.remove(k,i);
-//					unsafeBombCount--;
+					//					unsafeBombCount--;
 				}
 
 				else if(board[k][i].isFlagged()&&!board[k][i].isBomb()){
@@ -593,7 +597,7 @@ public class Board {
 
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
-				
+
 
 		int ySpacing = 0;
 
@@ -614,13 +618,13 @@ public class Board {
 					}
 
 					else if(board[x][y].isFlagged()){
-						
+
 						int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
 						int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
-						
+
 						int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
 						int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
-						
+
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
 
@@ -629,13 +633,13 @@ public class Board {
 
 						xArray[2] = xSpacing+10; //bottom right
 						yArray[2] = ySpacing+16;
-						
+
 						g.setColor(Color.LIGHT_GRAY);
 						g.fillPolygon(xLightTri, yLightTri, 3);
-						
+
 						g.setColor(Color.BLACK);
 						g.fillPolygon(xDarkTri, yDarkTri, 3);
-						
+
 						g.setColor(Color.GRAY);
 						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
 
@@ -644,55 +648,55 @@ public class Board {
 						g.setColor(Color.BLACK);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
-					
+
 					else if(board[x][y].beingPressed()){
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
-						}
-					
+					}
+
 					else{
-					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
-					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
-					
-					int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
-					int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
-						
-					g.setColor(Color.LIGHT_GRAY);
-					g.fillPolygon(xLightTri, yLightTri, 3);
-					
-					g.setColor(Color.BLACK);
-					g.fillPolygon(xDarkTri, yDarkTri, 3);
-					
-					g.setColor(Color.GRAY);
-					g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
-						
-					//g.drawString("", x, y);
-//					g.fillRect(xSpacing+1, ySpacing+13, 27, 15);
-//					g.setColor(Color.WHITE);
-//					g.fillRect(xSpacing+1, ySpacing+1, 26, 23);
-//					g.setColor(Color.BLACK);
-//					g.drawRect(xSpacing+1, ySpacing+1, 26, 22);
+						int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
+						int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
+
+						int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
+						int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
+
+						g.setColor(Color.LIGHT_GRAY);
+						g.fillPolygon(xLightTri, yLightTri, 3);
+
+						g.setColor(Color.BLACK);
+						g.fillPolygon(xDarkTri, yDarkTri, 3);
+
+						g.setColor(Color.GRAY);
+						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
+
+						//g.drawString("", x, y);
+						//					g.fillRect(xSpacing+1, ySpacing+13, 27, 15);
+						//					g.setColor(Color.WHITE);
+						//					g.fillRect(xSpacing+1, ySpacing+1, 26, 23);
+						//					g.setColor(Color.BLACK);
+						//					g.drawRect(xSpacing+1, ySpacing+1, 26, 22);
 					}
 
 				}
 				else{
 
 					if(board[x][y].isBomb()){
-						
-						
-						
+
+
+
 						g.setColor(Color.BLACK);
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
 						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
 						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
 						g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
 						g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
-						
+
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-						
+
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
@@ -707,12 +711,21 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
-//					if(x==startX&&y==startY){
-//						g.setColor(Color.YELLOW);
-//						g.fillOval(xSpacing+5, ySpacing+5, 18, 18);
-//						
-//					}
-					
+					//					if(x==startX&&y==startY){
+					//						g.setColor(Color.YELLOW);
+					//						g.fillOval(xSpacing+5, ySpacing+5, 18, 18);
+					//						
+					//					}
+					//
+					//					Color myColour = new Color(255, 0, 0, 128 );
+					//					Graphics2D g2d = (Graphics2D) g;
+					//
+					//					GradientPaint gp1 = new GradientPaint(5, 5,
+					//					Color.red, 20, 20, Color.black, true);
+					//
+					//					g2d.setPaint(gp1);
+					//					g2d.fillRect(20, 20, 300, 40);
+
 				}
 
 				xSpacing += 27;
