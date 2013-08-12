@@ -15,6 +15,8 @@ public class Menu extends JFrame implements ActionListener, MouseMotionListener,
 	
 	Play play;
 	Menu menu;
+	
+	String gameDifficulty;
 	int blockSize = 100;
 	
 	String[][] options = new String[2][2];
@@ -23,7 +25,7 @@ public class Menu extends JFrame implements ActionListener, MouseMotionListener,
 
 		MenuDisplay d = new MenuDisplay();
 		this.setTitle("MINESWEEPER   PLEASE SELECT A DIFFICULTY");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
 		this.add(d);
 		this.setSize(300,300);
 		this.setVisible(true);
@@ -35,13 +37,11 @@ public class Menu extends JFrame implements ActionListener, MouseMotionListener,
 		options[0][0] = "EASY";
 		options[0][1] = "MEDIUM";
 		options[1][0] = "HARD";
-		
+		options[1][1] = "CUSTOM";
 		
 	}
 	
 	public void paintMenu(Graphics f){
-		
-		
 		
 		int ySpacing = 0;
 		
@@ -74,6 +74,11 @@ public class Menu extends JFrame implements ActionListener, MouseMotionListener,
 
 	}
 
+	public String getGameDifficulty(){
+		
+		return gameDifficulty;
+	}
+	
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
@@ -89,9 +94,9 @@ public class Menu extends JFrame implements ActionListener, MouseMotionListener,
 		int x = e.getX()/blockSize;
 		int y = (e.getY()-26)/blockSize; //23 is the title bar size
 		
-		play = new Play(options[x][y]);
+		gameDifficulty = options[x][y];
 		
-		
+		System.out.println(gameDifficulty);
 	}
 
 	public void mouseEntered(MouseEvent e) {

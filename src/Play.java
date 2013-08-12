@@ -23,10 +23,17 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//JFrame secret = new JFrame();
 
-		//Menu newGameWindow = new Menu();
+		Menu newGameWindow = new Menu();
 		
-
-		Play game = new Play("ANUS");
+		while(newGameWindow.getGameDifficulty()==null){
+			
+			System.out.println("");
+			
+		}
+		
+		newGameWindow.dispose();
+		
+		Play game = new Play(newGameWindow.getGameDifficulty());
 		game.playBoard.initializeBoard();
 		
 		//String path = JOptionPane.showInputDialog("Pop up message text here");
@@ -78,7 +85,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		GameDisplay d = new GameDisplay();
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
 		this.add(d);
 		this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23);
 		this.setVisible(true);
@@ -108,7 +115,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		return gameOver;
 	}
-
+	
 
 	public class GameDisplay extends JPanel{
 
