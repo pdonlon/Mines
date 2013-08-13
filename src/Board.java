@@ -11,7 +11,7 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-
+	Play game;
 	CheckList pressed;
 	CheckList bombs;
 	Mine board[][];
@@ -63,10 +63,20 @@ public class Board {
 
 		return width;
 	}
+	
+	public void setWidth(int a){
+		
+		width = a;
+	}
 
 	public int getHeight(){
 
 		return height;
+	}
+	
+	public void setHeight(int a){
+		
+		height = a;
 	}
 
 	public int getOpenedBoxCount(){
@@ -315,6 +325,8 @@ public class Board {
 
 	public void fastClick(int x, int y){
 
+		//TODO help the user by not making it go off when insufficient flags
+		
 		for(int i=-1; i<2; i++){			
 			for(int j=-1; j<2; j++){
 
@@ -599,7 +611,7 @@ public class Board {
 		int[] yArray = new int[3];
 
 
-		int ySpacing = 0;
+		int ySpacing = 30; //TODO edit
 
 		for(int y=0; y<height; y++){
 
@@ -710,21 +722,6 @@ public class Board {
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
-
-					//					if(x==startX&&y==startY){
-					//						g.setColor(Color.YELLOW);
-					//						g.fillOval(xSpacing+5, ySpacing+5, 18, 18);
-					//						
-					//					}
-					//
-					//					Color myColour = new Color(255, 0, 0, 128 );
-					//					Graphics2D g2d = (Graphics2D) g;
-					//
-					//					GradientPaint gp1 = new GradientPaint(5, 5,
-					//					Color.red, 20, 20, Color.black, true);
-					//
-					//					g2d.setPaint(gp1);
-					//					g2d.fillRect(20, 20, 300, 40);
 
 				}
 
