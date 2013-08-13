@@ -44,7 +44,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//JFrame secret = new JFrame();
 
-		JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+		//JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
 
 		//Menu newGameWindow = new Menu();
 
@@ -80,7 +80,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		else{
 
-			this.setDifficulty("CUSTOM");
+			this.setDifficulty("CUSTOM"); //TODO prevent user from doing dumb shit
 
 			String x = JOptionPane.showInputDialog("Desired width of your board");
 			int width = Integer.parseInt(x);

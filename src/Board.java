@@ -63,9 +63,9 @@ public class Board {
 
 		return width;
 	}
-	
+
 	public void setWidth(int a){
-		
+
 		width = a;
 	}
 
@@ -73,9 +73,9 @@ public class Board {
 
 		return height;
 	}
-	
+
 	public void setHeight(int a){
-		
+
 		height = a;
 	}
 
@@ -133,13 +133,13 @@ public class Board {
 
 		return startY;
 	}
-	
+
 	public void setUp(){
-	
+
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
-		
+
 	}
 
 	public boolean alreadyThere(int x, int y){
@@ -325,17 +325,32 @@ public class Board {
 
 	public void fastClick(int x, int y){
 
-		//TODO help the user by not making it go off when insufficient flags
-		
+		int flags = 0;
+
 		for(int i=-1; i<2; i++){			
 			for(int j=-1; j<2; j++){
 
-				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened()){
 
-					if(board[x+j][y+i].isBomb())
-						bombs.remove(x+j,y+i);
+					if(board[x+j][y+i].isFlagged())
+						flags++;
+				}
+			}
+		}
 
-					openBox(x+j,y+i);	
+		if(flags == board[x][y].getBombsSurrounding()){
+
+			for(int i=-1; i<2; i++){			
+				for(int j=-1; j<2; j++){
+
+					if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
+
+
+						if(board[x+j][y+i].isBomb())
+							bombs.remove(x+j,y+i);
+
+						openBox(x+j,y+i);	
+					}
 				}
 			}
 		}
