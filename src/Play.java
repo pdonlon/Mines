@@ -35,7 +35,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	CheckList bombs;
 	GameDisplay gameD;
 	JComboBox box;
-
+	
 	String difficulty;
 
 	boolean gameOver = false;
@@ -130,12 +130,12 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		game.addActionListener(this);
 		help.addActionListener(this);
-
+		
 		this.pack();
 		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
 		this.add(gameD);
-		this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23+53);
+		this.setSize(playBoard.getWindowX(),playBoard.getWindowY());
 		this.setVisible(true);
 		this.setResizable(false);
 
@@ -193,8 +193,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
-			int x = e.getX()/27;
-			int y = (e.getY()-26-53)/27;
+			int x = (e.getX()-2)/27;
+			int y = (e.getY()-26-22)/27;
 
 			playBoard.add(x, y);
 			playBoard.press(x,y);
@@ -208,8 +208,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(!playBoard.isEmpty())
 			playBoard.resetPressed();
 
-		int x = e.getX()/27;
-		int y = (e.getY()-26-53)/27;
+		int x = (e.getX()-2)/27;
+		int y = (e.getY()-26-22)/27;
 
 		if(playBoard.isValid(x, y)){
 
@@ -276,8 +276,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
-			int x = e.getX()/27;
-			int y = (e.getY()-26-53)/27;
+			int x = (e.getX()-2)/27;
+			int y = (e.getY()-26-22)/27;
 
 
 

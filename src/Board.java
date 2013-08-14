@@ -119,6 +119,20 @@ public class Board {
 		return lose;
 	}
 
+	public int getWindowX(){
+
+		int windowX = 27*getWidth()+1;
+
+		return windowX;
+	}
+
+	public int getWindowY(){
+
+		int windowY = 27*getHeight()+80;
+
+		return windowY;
+	}
+
 	public boolean getFirstTurn(){
 
 		return firstTurn;
@@ -625,8 +639,7 @@ public class Board {
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
 
-
-		int ySpacing = 30; //TODO edit
+		int ySpacing = 0; //TODO edit
 
 		for(int y=0; y<height; y++){
 
@@ -697,12 +710,7 @@ public class Board {
 						g.setColor(Color.GRAY);
 						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
 
-						//g.drawString("", x, y);
-						//					g.fillRect(xSpacing+1, ySpacing+13, 27, 15);
-						//					g.setColor(Color.WHITE);
-						//					g.fillRect(xSpacing+1, ySpacing+1, 26, 23);
-						//					g.setColor(Color.BLACK);
-						//					g.drawRect(xSpacing+1, ySpacing+1, 26, 22);
+						
 					}
 
 				}
@@ -744,8 +752,14 @@ public class Board {
 			}
 			ySpacing+= 27;
 		}
+
+		g.setColor(Color.GRAY);
+		g.drawRect(0, getWindowY()-79, getWindowX(), 22);
+		g.setColor(Color.WHITE);
+		g.fillRect(0, getWindowY()-78, getWindowX(), 21);
+		//g.setColor(Color.);
+		//getwindowy -36
 	}
-	//stack of bomb locations when initialized then pops and makes that one red (simulating it's being blown up)
 }
 
 
