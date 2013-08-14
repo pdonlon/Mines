@@ -22,20 +22,23 @@ import javax.swing.*;
 public class Play extends JFrame implements ActionListener, MouseMotionListener, MouseListener{
 
 	JMenuItem g1 = new JMenuItem("Reset");
-	JMenuItem g2 = new JMenuItem("Easy");
-	JMenuItem g3 = new JMenuItem("Medium");
-	JMenuItem g4 = new JMenuItem("Hard");
-	JMenuItem g5 = new JMenuItem("Custom");
-	JMenuItem g6 = new JMenuItem("Exit");
+	JMenuItem g2 = new JMenuItem("Exit");
+
+	JCheckBoxMenuItem m1 = new JCheckBoxMenuItem("Easy");
+	JCheckBoxMenuItem m2 = new JCheckBoxMenuItem("Medium");
+	JCheckBoxMenuItem m3 = new JCheckBoxMenuItem("Hard");
+	JCheckBoxMenuItem m4 = new JCheckBoxMenuItem("Custom");
+
 
 	JMenuItem h1 = new JMenuItem("Instructions");
 	JMenuItem h2 = new JMenuItem("About");
+	JMenuItem h3 = new JMenuItem("More Apps...");
 
 	Board playBoard;
 	CheckList bombs;
 	GameDisplay gameD;
 	JComboBox box;
-	
+
 	String difficulty;
 
 	boolean gameOver = false;
@@ -48,7 +51,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//Menu newGameWindow = new Menu();
 
-		Play game = new Play("HARD");
+		Play game = new Play("MEDIUM");
 		//game.playBoard.initializeBoard();
 
 		//String path = JOptionPane.showInputDialog("Pop up message text here");
@@ -100,39 +103,48 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		JMenu help = new JMenu("Help");
 		JMenuBar menuBar = new JMenuBar();
 		JMenu game = new JMenu("Game");
+		JMenu mode = new JMenu("Mode");
 
 		gameD = new GameDisplay();
 		this.setJMenuBar(menuBar);
 
 
 		menuBar.add(game);
+		menuBar.add(mode);
 		menuBar.add(help);
 
 		game.add(g1);
 		game.add(g2);
-		game.add(g3);
-		game.add(g4);
-		game.add(g5);
-		game.add(g6);
+
+		mode.add(m1);
+		mode.add(m2);
+		mode.add(m3);
+		mode.add(m4);
 
 		help.add(h1);
 		help.add(h2);
+		help.add(h3);
 
 		g1.addActionListener(this);
 		g2.addActionListener(this);
-		g3.addActionListener(this);
-		g4.addActionListener(this);
-		g5.addActionListener(this);
-		g6.addActionListener(this);
-		
+
+		m1.addActionListener(this);
+		m2.addActionListener(this);
+		m3.addActionListener(this);
+		m4.addActionListener(this);
+
 		h1.addActionListener(this);
 		h2.addActionListener(this);
+		h3.addActionListener(this);
 
+		mode.addActionListener(this);
 		game.addActionListener(this);
 		help.addActionListener(this);
+
+		m2.setSelected(true);
 		
 		this.pack();
-		setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
+		setTitle("Mines");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
 		this.add(gameD);
 		this.setSize(playBoard.getWindowX(),playBoard.getWindowY());
@@ -244,9 +256,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 					playBoard.markFlagged(x, y);
 				}
-				if(!gameOver)
-					updateFlagTitle();
-
+					
 			}
 			else
 				gameOverTitle();
@@ -300,66 +310,101 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void actionPerformed(ActionEvent e) {
 
-		if(e.getSource() == g2){
+		if(e.getSource() == m1){
+			clearChecks();
+			m1.setSelected(true);
 			playBoard.setWidth(9);
 			playBoard.setHeight(9);
 			this.setDifficulty("EASY");
 			playBoard.setTotalBombs(10);
 		}
 
-		else if(e.getSource() == g3){
+		else if(e.getSource() == m2){
+			clearChecks();
+			m2.setSelected(true);
 			playBoard.setWidth(16);
 			playBoard.setHeight(16);
 			this.setDifficulty("MEDIUM");
 			playBoard.setTotalBombs(40);
 			resetGame();
 		}
-		
-		else if(e.getSource() == g4){
+
+		else if(e.getSource() == m3){
+			clearChecks();
+			m3.setSelected(true);
 			playBoard.setWidth(30);
 			playBoard.setHeight(16);
 			this.setDifficulty("Hard");
 			playBoard.setTotalBombs(99);
 		}
-		else if(e.getSource() == g5){//custom
-			
-		String x = JOptionPane.showInputDialog("Desired width of your board");
-		int width = Integer.parseInt(x);
-		playBoard.setWidth(width);
-		
-		String y = JOptionPane.showInputDialog("Desired height of your board");
-		int height = Integer.parseInt(y);
-		playBoard.setHeight(height);
+		else if(e.getSource() == m4){//custom
 
-		String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
-		int totalBombs = Integer.parseInt(bombs);
-
-		playBoard.setTotalBombs(totalBombs);
+			clearChecks();
+			m4.setSelected(true);
+			int width = 0, height =0, totalBombs = 0;
 			
+			while(width<9){
+				String x = JOptionPane.showInputDialog("Desired width of your board");
+				if(x==null)
+					return;
+					
+				try{
+				width = Integer.parseInt(x);
+				playBoard.setWidth(width);
+				}
+				catch(Exception ex){
+					width = 0;
+				}
+			}
+
+			while(height<9){
+				String y = JOptionPane.showInputDialog("Desired height of your board");
+				if(y==null)
+					return;
+					
+				try{
+				height = Integer.parseInt(y);
+				playBoard.setHeight(height);
+				}
+				catch(Exception ex){
+					height = 0;
+				}
+			}
+
+			while(totalBombs<=0 || totalBombs>width*height-9){
+				String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
+				if(bombs==null)
+					return;
+				try{
+					totalBombs = Integer.parseInt(bombs);
+					playBoard.setTotalBombs(totalBombs);
+				}
+				catch(Exception ex){
+					totalBombs = 0;
+				}
+			}
+
 			this.setDifficulty("CUSTOM");
 		}
-		
+
 		playBoard.setUp();
-		this.setTitle(""+this.getDifficulty()+"     Flag Count: "+this.playBoard.getFlagCount());
 		this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23+53);
 		resetGame();
 		playBoard.initializeBoard();
-		
-		
+
+
 		if(e.getSource() == g1) //reset
 			this.resetGame();
 
-		else if(e.getSource() == g6) //Exit
+		else if(e.getSource() == g2) //Exit
 			this.dispose();
-			
+
 		else if(e.getSource() == h1) //instructions
 			this.resetGame();
 		else if(e.getSource() == h2) //about
-		{ //TODO
-			
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
-			
-			}
+		else if(e.getSource() == h3)
+			goOnline("http://www.github.com/pdonlon");
 	}
 
 	public void anonymous(){
@@ -389,21 +434,36 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	}
 
-	public void updateFlagTitle(){
-
-		setTitle(""+getDifficulty()+"     Flag Count: "+playBoard.getFlagCount());
-
-	}
-
 	public void resetGame(){
 
 		playBoard.startup();
 		playBoard.wipeBoard();
 		gameOver = false;
 
+		
 		repaint();
 	}
 
+
+	public void goOnline(String site){
+		try {
+			java.awt.Desktop.getDesktop().browse(new URI(site));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void clearChecks(){
+		
+		m1.setSelected(false);
+		m2.setSelected(false);
+		m3.setSelected(false);
+		m4.setSelected(false);
+		
+	}
+	
 	public void explosion(){
 
 		playBoard.openBomb();

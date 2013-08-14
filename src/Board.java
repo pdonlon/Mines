@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.color.*;
 
 import javax.swing.JPanel;
@@ -37,7 +39,8 @@ public class Board {
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
 
-
+	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
+	
 	public Mine[][] getBoard(){
 
 		return board;
@@ -47,16 +50,9 @@ public class Board {
 
 		this.width = width;
 		this.height = height;
-
-		board = new Mine[width][height];
-
-		totalBoxes = width*height;
-
-		flagCount = totalBombs;
-		unsafeBombCount = totalBombs;
-		flagLimit=flagCount;
-
 		bombs = new CheckList();
+
+		startup();
 	}
 
 	public int getWidth(){
@@ -212,11 +208,16 @@ public class Board {
 
 		bombs.empty();
 
-		openedBoxCount=0; 
+		openedBoxCount=0;
+		
+		board = new Mine[width][height];
+
+		totalBoxes = width*height;
 
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
+
 
 		win = false;
 		lose = false;
@@ -630,7 +631,7 @@ public class Board {
 
 
 	public void paintBoard(Graphics g){
-
+		
 		if(speedTrick)
 			g.drawString("", 1, 1);
 		else
@@ -638,9 +639,50 @@ public class Board {
 
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
+	
+		int ySpacing = 0; 
+		
+		for(int y=0; y<height; y++){
+				
+			int xSpacing = 0;
+			
+			for(int x=0; x<width; x++){
+				
+				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
+					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
+					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
 
-		int ySpacing = 0; //TODO edit
+					int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
+					int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
 
+					g.setColor(Color.LIGHT_GRAY);
+					g.fillPolygon(xLightTri, yLightTri, 3);
+
+					g.setColor(Color.BLACK);
+					g.fillPolygon(xDarkTri, yDarkTri, 3);
+
+					g.setColor(Color.GRAY);
+					g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
+
+				}
+						
+				xSpacing+=27;
+			}
+			ySpacing+=27;
+		}
+		
+		Color color1 = new Color(140,140,140,128);
+        Color color2 = new Color(39,39,39,128);
+        Color color3 = new Color(200,200,200,127);
+        
+        Graphics2D g2d = (Graphics2D)g;
+        GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
+        g2d.setPaint(gp);
+        g.fillRect( 0, 0, getWindowX(), getWindowY()-78);	
+        //g2d.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+
+        ySpacing =0;
+        
 		for(int y=0; y<height; y++){
 
 			int xSpacing = 0;
@@ -659,12 +701,6 @@ public class Board {
 
 					else if(board[x][y].isFlagged()){
 
-						int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
-						int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
-
-						int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
-						int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
-
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
 
@@ -673,17 +709,10 @@ public class Board {
 
 						xArray[2] = xSpacing+10; //bottom right
 						yArray[2] = ySpacing+16;
-
-						g.setColor(Color.LIGHT_GRAY);
-						g.fillPolygon(xLightTri, yLightTri, 3);
-
-						g.setColor(Color.BLACK);
-						g.fillPolygon(xDarkTri, yDarkTri, 3);
-
-						g.setColor(Color.GRAY);
-						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
-
+						
 						g.setColor(Color.RED);
+						g.fillPolygon(xArray,yArray, 3);
+						g.setColor(color3);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
 						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
@@ -691,34 +720,13 @@ public class Board {
 
 					else if(board[x][y].beingPressed()){
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
-					}
-
-					else{
-						int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
-						int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
-
-						int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
-						int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
-
-						g.setColor(Color.LIGHT_GRAY);
-						g.fillPolygon(xLightTri, yLightTri, 3);
-
-						g.setColor(Color.BLACK);
-						g.fillPolygon(xDarkTri, yDarkTri, 3);
-
-						g.setColor(Color.GRAY);
-						g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
-
-						
+						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 					}
 
 				}
 				else{
 
 					if(board[x][y].isBomb()){
-
-
 
 						g.setColor(Color.BLACK);
 						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
@@ -731,19 +739,22 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
-					else{ 
+					else{
+						//HERE
 						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
-						Font font = new Font("SANS_SERIF", Font.BOLD,10); 
+						
+						g.setColor(color3);
+						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.setColor(Color.WHITE);
 						g.setFont(font);
-						g.setColor(Color.BLACK);
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						
 					}
 
 				}
@@ -757,6 +768,9 @@ public class Board {
 		g.drawRect(0, getWindowY()-79, getWindowX(), 22);
 		g.setColor(Color.WHITE);
 		g.fillRect(0, getWindowY()-78, getWindowX(), 21);
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
+		g.drawString("Flags: "+getFlagCount(), 2, getWindowY()-63);
 		//g.setColor(Color.);
 		//getwindowy -36
 	}

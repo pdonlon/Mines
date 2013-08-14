@@ -136,10 +136,10 @@ public class Mine {
 			color = Color.YELLOW;
 
 		else if(bombsSurrounding==7)
-			color = Color.DARK_GRAY;
+			color = Color.BLUE;
 
 		else
-			color = Color.GRAY;
+			color = Color.BLACK;
 
 
 
