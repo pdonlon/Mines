@@ -43,8 +43,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	String difficulty;
 
 	boolean gameOver = false;
-	
-	
+
+
 
 	public static void main(String[] args) {
 
@@ -239,9 +239,10 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 				if(gameOver)
 					resetGame();
 
-				else
+				else if(!playBoard.isOpen(x,y))
 					playBoard.open(x, y);
-
+				else
+					playBoard.fastClick(x,y);
 			}
 			if(!gameOver()){
 
@@ -249,13 +250,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 					if(e.getClickCount() == 2)	{
 
 						if(playBoard.getStartX()==x && playBoard.getStartY()==y)
-
 							resetGame();
-
-						else if(playBoard.unopenedAround(x, y))
-							playBoard.fastClick(x,y);
-
-
 					}
 				}
 
@@ -266,12 +261,12 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 			}
 			else
-				
-			if(playBoard.lose){
 
-				anonymous();
+				if(playBoard.lose){
 
-			}
+					anonymous();
+
+				}
 			repaint();
 		}
 
@@ -318,7 +313,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public void actionPerformed(ActionEvent e) {
 
 
-		
+
 
 		if(e.getSource() == g2) //question marks
 			questionMarks();
@@ -333,7 +328,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		else if(e.getSource() == g1) //reset
 			this.resetGame();
-		
+
 		else if(e.getSource() == h1) //about
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
 		else if(e.getSource() == h2) //instructions
@@ -524,6 +519,11 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 			playBoard.check();
 			System.out.print("pressing c");
+			repaint();
+		}
+
+		else if(keycode == 72){
+			playBoard.hint();
 			repaint();
 		}
 

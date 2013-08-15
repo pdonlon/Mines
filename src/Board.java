@@ -1,8 +1,10 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.color.*;
 
 import javax.swing.JPanel;
@@ -365,6 +367,16 @@ public class Board {
 		}
 		return valid;
 	}
+	
+	public boolean isOpen(int x,int y){
+		
+		boolean open = false;
+		
+		if(board[x][y].isOpened())
+			open = true;
+		
+		return open;
+	}
 
 	public boolean unopenedAround(int x, int y){
 
@@ -381,23 +393,26 @@ public class Board {
 
 		return unopened;
 	}
+	
+	public boolean unopenedAndUnflaggedAround(int x, int y){
 
-	public void fastClick(int x, int y){
-
-		int flags = 0;
+		boolean unopened = false;
 
 		for(int i=-1; i<2; i++){			
 			for(int j=-1; j<2; j++){
 
-				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened()){
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged() )
+					unopened = true;
 
-					if(board[x+j][y+i].isFlagged())
-						flags++;
-				}
 			}
 		}
 
-		if(flags == board[x][y].getBombsSurrounding()){
+		return unopened;
+	}
+
+	public void fastClick(int x, int y){
+
+		if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding()){
 
 			for(int i=-1; i<2; i++){			
 				for(int j=-1; j<2; j++){
@@ -414,7 +429,7 @@ public class Board {
 			}
 		}
 	}
-
+	
 	public void finishFlagging(){
 
 		for(int y=0; y<height; y++){
@@ -561,6 +576,74 @@ public class Board {
 	public void removeQuestionMark(int x, int y){
 
 		board[x][y].setQuestionMarked(false);
+	}
+
+	public int flagsSurrounding(int x, int y){
+
+		int flags = 0;
+
+		for(int i=-1; i<2; i++){			
+			for(int j=-1; j<2; j++){
+
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened()){
+
+					if(board[x+j][y+i].isFlagged())
+						flags++;
+				}
+			}
+		}
+		return flags;
+	}
+
+
+	public int unopenedSurrounding(int x, int y){
+
+		int unopened = 0;
+
+		for(int i=-1; i<2; i++){			
+			for(int j=-1; j<2; j++){
+
+				if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened()){
+
+					if(!board[x+j][y+i].isOpened())
+						unopened++;
+				}
+			}
+		}
+		return unopened;
+	}
+
+
+	public int[] getHint(){
+
+		int xHint =-1; 
+		int yHint =-1;
+
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+
+				Mine b = board[x][y];
+
+				if(b.isOpened() && b.getBombsSurrounding()>0){
+					if (flagsSurrounding(x,y)== b.getBombsSurrounding()&&unopenedAndUnflaggedAround(x, y)
+							|| ((flagsSurrounding(x,y)+unopenedSurrounding(x,y) == board[x][y].getBombsSurrounding())
+								&& unopenedSurrounding(x,y)>0)){
+						xHint = x;
+						yHint = y;
+					}
+				}
+			}
+		}
+
+		int[] hint = {xHint, yHint};
+		return hint;
+
+	}
+
+	public void hint(){
+
+		showHint = true;
+
 	}
 
 	public void openBomb(){
@@ -881,6 +964,15 @@ public class Board {
 		if(checkBoard){
 			g.drawString(checkBoard(), 60, getWindowY()-63);
 			checkBoard = false;
+		}
+
+		if(showHint){
+			Color color = new Color(255,255,0,255);
+			g.setColor(color);
+			g2d.setStroke(new BasicStroke(3));
+			g.drawRect(getHint()[0]*27+2, getHint()[1]*27+2, 25, 25);
+			System.out.print(""+getHint()[0]+","+getHint()[1]);
+			showHint = false;
 		}
 
 		if(gameOver()){
