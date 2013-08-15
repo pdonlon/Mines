@@ -333,10 +333,10 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		else if(e.getSource() == g1) //reset
 			this.resetGame();
 		
-		else if(e.getSource() == h1) //instructions
+		else if(e.getSource() == h1) //about
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
-		else if(e.getSource() == h2) //about
-			this.resetGame();
+		else if(e.getSource() == h2) //instructions
+			JOptionPane.showMessageDialog(null, "Open all the tiles without hitting a bomb.\nNumbered tiles indicate how many bombs are touching it.\nLeft click to open a single tile.\nFlag a tile by right clicking.\nDouble click a tile with the correct amount of flags around it for a speed click.\nDouble click the starting tile for a quick reset.");
 		else if(e.getSource() == h3) //more apps
 			goOnline("http://www.github.com/pdonlon");
 
