@@ -38,6 +38,11 @@ public class Board {
 	boolean firstTurn = true;
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
+	
+	boolean checkBoard = false; //TODO
+	boolean showWrong = false; //TODO
+	boolean showHint = false; //TODO
+	boolean questionMarks = true;
 
 	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
 	
@@ -151,6 +156,42 @@ public class Board {
 		flagLimit=flagCount;
 
 	}
+	
+	public void check(){
+		
+		checkBoard = true;
+		
+	}
+	
+	public String checkBoard(){
+		
+		String correct = "correct";
+		String incorrect = "incorrect";
+		
+		boolean right = true;
+		
+		for(int y =0; y<height; y++){
+			for(int x=0; x<width; x++){
+				
+				if(board[x][y].isFlagged()&&!board[x][y].isBomb())
+					right = false;
+			}
+		}
+		
+		if(right)
+			return correct;
+		else
+			return incorrect;
+		
+		//TODO
+		
+	}
+	
+	public void showIncorrect(){
+		
+		//TODO
+		
+	}
 
 	public boolean alreadyThere(int x, int y){
 
@@ -197,7 +238,7 @@ public class Board {
 		for(int y=0; y<height; y++ ){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false, false);
+				board[x][y] = new Mine (false, 0, false, false, false, false, false, false);
 
 			}
 		}
@@ -253,7 +294,7 @@ public class Board {
 		for(int y=0; y<height; y++){
 			for(int x=0; x<width; x++){
 
-				board[x][y] = new Mine (false, 0, false, false, false, false, false); 
+				board[x][y] = new Mine (false, 0, false, false, false, false, false, false); 
 
 			}
 		}
@@ -381,6 +422,8 @@ public class Board {
 			}
 		}
 
+		flagCount = 0; 
+		
 	}
 
 	public void openZeros(int x, int y){
@@ -437,20 +480,25 @@ public class Board {
 
 		if(board[x][y].isFlagged()){
 
-			board[x][y].setFlagged(false);
-
-			flagCount++;
+			removeFlag(x,y);
+		if(questionMarks)
+			questionMark(x,y);
 
 		}
+		
+		else if(board[x][y].isQuestionMarked()&& questionMarks){
+			
+			removeQuestionMark(x,y);
+			
+		}
 
-		else if(!board[x][y].isOpened()){ //flagCount>0 && 
+		else{ //flagCount>0 && 
 
 			board[x][y].setFlagged(true);
 
 			flagCount--;
-
-
 		}
+		
 
 	}
 
@@ -485,6 +533,28 @@ public class Board {
 
 
 		}
+	}
+	
+	public void setQuestionMarks(boolean a){
+		
+		questionMarks = a;
+	}
+	
+	public boolean questionMarksEnabled(){
+		
+		return questionMarks;
+		
+	}
+	
+	public void questionMark(int x, int y){
+		
+		board[x][y].setQuestionMarked(true);
+		
+	}
+	
+	public void removeQuestionMark(int x, int y){
+		
+		board[x][y].setQuestionMarked(false);
 	}
 
 	public void openBomb(){
@@ -694,9 +764,10 @@ public class Board {
 				if(!board[x][y].isOpened()){
 
 					if(board[x][y].isWrong()){ //draws X					
-						g.drawLine(xSpacing+5, ySpacing+5, xSpacing+23, ySpacing+23); //top left/bottom right
-						g.drawLine(xSpacing+23, ySpacing+5, xSpacing+5, ySpacing+23);//top right/bottom left
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.setColor(color1);
+						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.setColor(Color.WHITE);
+						g.drawString("X", xSpacing+10, ySpacing+19);
 					}
 
 					else if(board[x][y].isFlagged()){
@@ -722,6 +793,11 @@ public class Board {
 						g.setColor(Color.GRAY);
 						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 					}
+					
+					else if(board[x][y].isQuestionMarked()){
+						g.setColor(Color.WHITE);
+						g.drawString("?", xSpacing+10, ySpacing+19);
+					}
 
 				}
 				else{
@@ -739,7 +815,7 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-						g.setColor(Color.GRAY);
+						g.setColor(color1);
 						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
@@ -771,6 +847,12 @@ public class Board {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
 		g.drawString("Flags: "+getFlagCount(), 2, getWindowY()-63);
+		
+		if(checkBoard){
+			g.drawString(checkBoard(), 10, getWindowY()-63);
+			checkBoard = false;
+		}
+			
 		//g.setColor(Color.);
 		//getwindowy -36
 	}

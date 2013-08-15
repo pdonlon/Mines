@@ -19,10 +19,12 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class Play extends JFrame implements ActionListener, MouseMotionListener, MouseListener{
+public class Play extends JFrame implements ActionListener, MouseMotionListener, MouseListener, KeyListener{
 
 	JMenuItem g1 = new JMenuItem("Reset");
-	JMenuItem g2 = new JMenuItem("Exit");
+	JCheckBoxMenuItem g2 = new JCheckBoxMenuItem("Question Marks");
+	JCheckBoxMenuItem g3 = new JCheckBoxMenuItem("Light Mode");
+	JMenuItem g4 = new JMenuItem("Exit");
 
 	JCheckBoxMenuItem m1 = new JCheckBoxMenuItem("Easy");
 	JCheckBoxMenuItem m2 = new JCheckBoxMenuItem("Medium");
@@ -30,14 +32,13 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	JCheckBoxMenuItem m4 = new JCheckBoxMenuItem("Custom");
 
 
-	JMenuItem h1 = new JMenuItem("Instructions");
-	JMenuItem h2 = new JMenuItem("About");
+	JMenuItem h1 = new JMenuItem("About");
+	JMenuItem h2 = new JMenuItem("Instructions");
 	JMenuItem h3 = new JMenuItem("More Apps...");
 
 	Board playBoard;
 	CheckList bombs;
 	GameDisplay gameD;
-	JComboBox box;
 
 	String difficulty;
 
@@ -115,6 +116,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		game.add(g1);
 		game.add(g2);
+		game.add(g3);
+		game.add(g4);
 
 		mode.add(m1);
 		mode.add(m2);
@@ -127,6 +130,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		g1.addActionListener(this);
 		g2.addActionListener(this);
+		g3.addActionListener(this);
+		g4.addActionListener(this);
+
 
 		m1.addActionListener(this);
 		m2.addActionListener(this);
@@ -142,7 +148,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		help.addActionListener(this);
 
 		m2.setSelected(true);
-		
+
 		this.pack();
 		setTitle("Mines");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
@@ -256,7 +262,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 					playBoard.markFlagged(x, y);
 				}
-					
+
 			}
 			else
 				gameOverTitle();
@@ -310,102 +316,120 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void actionPerformed(ActionEvent e) {
 
-		if(e.getSource() == m1){
-			clearChecks();
-			m1.setSelected(true);
-			playBoard.setWidth(9);
-			playBoard.setHeight(9);
-			this.setDifficulty("EASY");
-			playBoard.setTotalBombs(10);
+
+		
+
+		if(e.getSource() == g2) //question marks
+			questionMarks();
+
+		else if(e.getSource() == g3){
+			System.out.print("Well...this is embarassing");
 		}
 
-		else if(e.getSource() == m2){
-			clearChecks();
-			m2.setSelected(true);
-			playBoard.setWidth(16);
-			playBoard.setHeight(16);
-			this.setDifficulty("MEDIUM");
-			playBoard.setTotalBombs(40);
-			resetGame();
+		else if(e.getSource() == g4){
+			dispose();
 		}
 
-		else if(e.getSource() == m3){
-			clearChecks();
-			m3.setSelected(true);
-			playBoard.setWidth(30);
-			playBoard.setHeight(16);
-			this.setDifficulty("Hard");
-			playBoard.setTotalBombs(99);
-		}
-		else if(e.getSource() == m4){//custom
-
-			clearChecks();
-			m4.setSelected(true);
-			int width = 0, height =0, totalBombs = 0;
-			
-			while(width<9){
-				String x = JOptionPane.showInputDialog("Desired width of your board");
-				if(x==null)
-					return;
-					
-				try{
-				width = Integer.parseInt(x);
-				playBoard.setWidth(width);
-				}
-				catch(Exception ex){
-					width = 0;
-				}
-			}
-
-			while(height<9){
-				String y = JOptionPane.showInputDialog("Desired height of your board");
-				if(y==null)
-					return;
-					
-				try{
-				height = Integer.parseInt(y);
-				playBoard.setHeight(height);
-				}
-				catch(Exception ex){
-					height = 0;
-				}
-			}
-
-			while(totalBombs<=0 || totalBombs>width*height-9){
-				String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
-				if(bombs==null)
-					return;
-				try{
-					totalBombs = Integer.parseInt(bombs);
-					playBoard.setTotalBombs(totalBombs);
-				}
-				catch(Exception ex){
-					totalBombs = 0;
-				}
-			}
-
-			this.setDifficulty("CUSTOM");
-		}
-
-		playBoard.setUp();
-		this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23+53);
-		resetGame();
-		playBoard.initializeBoard();
-
-
-		if(e.getSource() == g1) //reset
+		else if(e.getSource() == g1) //reset
 			this.resetGame();
-
-		else if(e.getSource() == g2) //Exit
-			this.dispose();
-
+		
 		else if(e.getSource() == h1) //instructions
-			this.resetGame();
-		else if(e.getSource() == h2) //about
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
-		else if(e.getSource() == h3)
+		else if(e.getSource() == h2) //about
+			this.resetGame();
+		else if(e.getSource() == h3) //more apps
 			goOnline("http://www.github.com/pdonlon");
+
+		if(e.getSource()==m1 || e.getSource()==m2 || e.getSource()==m3 || e.getSource()==m4){
+
+			if(e.getSource() == m1){
+				clearChecks();
+				m1.setSelected(true);
+				playBoard.setWidth(9);
+				playBoard.setHeight(9);
+				this.setDifficulty("EASY");
+				playBoard.setTotalBombs(10);
+			}
+
+			else if(e.getSource() == m2){
+				clearChecks();
+				m2.setSelected(true);
+				playBoard.setWidth(16);
+				playBoard.setHeight(16);
+				this.setDifficulty("MEDIUM");
+				playBoard.setTotalBombs(40);
+
+			}
+
+			else if(e.getSource() == m3){
+				clearChecks();
+				m3.setSelected(true);
+				playBoard.setWidth(30);
+				playBoard.setHeight(16);
+				this.setDifficulty("Hard");
+				playBoard.setTotalBombs(99);
+			}
+			else if(e.getSource() == m4){//custom
+
+				clearChecks();
+				m4.setSelected(true);
+				int width = 0, height =0, totalBombs = 0;
+
+				while(width<9){
+					String x = JOptionPane.showInputDialog("Desired width of your board");
+					if(x==null)
+						return;
+
+					try{
+						width = Integer.parseInt(x);
+						playBoard.setWidth(width);
+					}
+					catch(Exception ex){
+						width = 0;
+					}
+				}
+
+				while(height<9){
+					String y = JOptionPane.showInputDialog("Desired height of your board");
+					if(y==null)
+						return;
+
+					try{
+						height = Integer.parseInt(y);
+						playBoard.setHeight(height);
+					}
+					catch(Exception ex){
+						height = 0;
+					}
+				}
+
+
+				while(totalBombs<=0 || totalBombs>width*height-9){
+					String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
+					if(bombs==null)
+						return;
+					try{
+						totalBombs = Integer.parseInt(bombs);
+						playBoard.setTotalBombs(totalBombs);
+					}
+					catch(Exception ex){
+						totalBombs = 0;
+					}
+				}
+
+				this.setDifficulty("CUSTOM");
+			}
+
+
+
+			playBoard.setUp();
+			this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23+53);
+			resetGame();
+			playBoard.initializeBoard();
+
+		}
 	}
+
 
 	public void anonymous(){
 
@@ -440,7 +464,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		playBoard.wipeBoard();
 		gameOver = false;
 
-		
+
 		repaint();
 	}
 
@@ -454,16 +478,27 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void clearChecks(){
-		
+
 		m1.setSelected(false);
 		m2.setSelected(false);
 		m3.setSelected(false);
 		m4.setSelected(false);
-		
+
 	}
-	
+
+	public void questionMarks(){
+		if(playBoard.questionMarksEnabled()){
+			g2.setSelected(false);
+			playBoard.setQuestionMarks(false);
+		}
+		else{
+			g2.setSelected(true);
+			playBoard.setQuestionMarks(true);
+		}
+	}
+
 	public void explosion(){
 
 		playBoard.openBomb();
@@ -478,6 +513,28 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		else
 			setTitle("GAME OVER! YOU LOSE");
+
+	}
+
+	public void keyTyped(KeyEvent ev) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void keyReleased(KeyEvent ev) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void keyPressed(KeyEvent ev) {
+
+		int keycode = ev.getKeyCode();
+
+		if(keycode == 32){ //TODO
+
+			//playBoard.check();
+			System.out.print("pressing c");
+		}
 
 	}
 
