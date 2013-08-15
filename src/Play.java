@@ -521,7 +521,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(keycode == 32){ //TODO
 
-			//playBoard.check();
+			playBoard.check();
 			System.out.print("pressing c");
 		}
 

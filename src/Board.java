@@ -39,16 +39,16 @@ public class Board {
 	boolean firstTurn = true;
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
-	
+
 	boolean checkBoard = false; //TODO
 	boolean showWrong = false; //TODO
 	boolean showHint = false; //TODO
 	boolean questionMarks = false;
-	
+
 	Timer timer;
 
 	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
-	
+
 	public Mine[][] getBoard(){
 
 		return board;
@@ -159,41 +159,41 @@ public class Board {
 		flagLimit=flagCount;
 
 	}
-	
+
 	public void check(){
-		
+
 		checkBoard = true;
-		
+
 	}
-	
+
 	public String checkBoard(){
-		
+
 		String correct = "correct";
 		String incorrect = "incorrect";
-		
+
 		boolean right = true;
-		
+
 		for(int y =0; y<height; y++){
 			for(int x=0; x<width; x++){
-				
+
 				if(board[x][y].isFlagged()&&!board[x][y].isBomb())
 					right = false;
 			}
 		}
-		
+
 		if(right)
 			return correct;
 		else
 			return incorrect;
-		
+
 		//TODO
-		
+
 	}
-	
+
 	public void showIncorrect(){
-		
+
 		//TODO
-		
+
 	}
 
 	public boolean alreadyThere(int x, int y){
@@ -253,7 +253,7 @@ public class Board {
 		bombs.empty();
 
 		openedBoxCount=0;
-		
+
 		board = new Mine[width][height];
 
 		totalBoxes = width*height;
@@ -426,7 +426,7 @@ public class Board {
 		}
 
 		flagCount = 0; 
-		
+
 	}
 
 	public void openZeros(int x, int y){
@@ -481,27 +481,30 @@ public class Board {
 
 	public void markFlagged(int x, int y){
 
-		if(board[x][y].isFlagged()){
+		if(!board[x][y].opened){
+			if(board[x][y].isFlagged()){
 
-			removeFlag(x,y);
-		if(questionMarks)
-			questionMark(x,y);
+				removeFlag(x,y);
+				if(questionMarks)
+					questionMark(x,y);
+				else
+					removeQuestionMark(x,y);
 
+			}
+
+			else if(board[x][y].isQuestionMarked()&& questionMarks){
+
+				removeQuestionMark(x,y);
+
+			}
+
+			else{ //flagCount>0 && 
+
+				board[x][y].setFlagged(true);
+
+				flagCount--;
+			}
 		}
-		
-		else if(board[x][y].isQuestionMarked()&& questionMarks){
-			
-			removeQuestionMark(x,y);
-			
-		}
-
-		else{ //flagCount>0 && 
-
-			board[x][y].setFlagged(true);
-
-			flagCount--;
-		}
-		
 
 	}
 
@@ -537,26 +540,26 @@ public class Board {
 
 		}
 	}
-	
+
 	public void setQuestionMarks(boolean a){
-		
+
 		questionMarks = a;
 	}
-	
+
 	public boolean questionMarksEnabled(){
-		
+
 		return questionMarks;
-		
+
 	}
-	
+
 	public void questionMark(int x, int y){
-		
+
 		board[x][y].setQuestionMarked(true);
-		
+
 	}
-	
+
 	public void removeQuestionMark(int x, int y){
-		
+
 		board[x][y].setQuestionMarked(false);
 	}
 
@@ -566,7 +569,7 @@ public class Board {
 			board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
 
 		//		else
-		//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
+			//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
 
 		bombs.deque();
 
@@ -701,33 +704,33 @@ public class Board {
 		}
 		System.out.println();
 	}
-	
+
 	public boolean gameOver(){
 
 		boolean gameOver = false;
-		
+
 		if(lose || win)
 			gameOver = true;
-		
+
 		return gameOver;
 	}
-	
+
 	public String gameOverMessage(){
 
 		String gameOver;
-		
+
 		if(win)
 			gameOver = "GAME OVER! YOU WIN!";
 
 		else
 			gameOver = "GAME OVER! YOU LOSE!";
-		
+
 		return gameOver;
 	}
 
 
 	public void paintBoard(Graphics g){
-		
+
 		if(speedTrick)
 			g.drawString("", 1, 1);
 		else
@@ -735,15 +738,15 @@ public class Board {
 
 		int[] xArray = new int[3];
 		int[] yArray = new int[3];
-	
+
 		int ySpacing = 0; 
-		
+
 		for(int y=0; y<height; y++){
-				
+
 			int xSpacing = 0;
-			
+
 			for(int x=0; x<width; x++){
-				
+
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
 					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
 					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
@@ -761,24 +764,24 @@ public class Board {
 					g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
 
 				}
-						
+
 				xSpacing+=27;
 			}
 			ySpacing+=27;
 		}
-		
-		Color color1 = new Color(140,140,140,128);
-        Color color2 = new Color(39,39,39,128);
-        Color color3 = new Color(200,200,200,127);
-        
-        Graphics2D g2d = (Graphics2D)g;
-        GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
-        g2d.setPaint(gp);
-        g.fillRect( 0, 0, getWindowX(), getWindowY()-78);	
-        //g2d.fillRect(xSpacing+1, ySpacing+1, 26, 26);
 
-        ySpacing =0;
-        
+		Color color1 = new Color(140,140,140,128);
+		Color color2 = new Color(39,39,39,128);
+		Color color3 = new Color(200,200,200,127);
+
+		Graphics2D g2d = (Graphics2D)g;
+		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
+		g2d.setPaint(gp);
+		g.fillRect( 0, 0, getWindowX(), getWindowY()-78);	
+		//g2d.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+
+		ySpacing =0;
+
 		for(int y=0; y<height; y++){
 
 			int xSpacing = 0;
@@ -806,7 +809,7 @@ public class Board {
 
 						xArray[2] = xSpacing+10; //bottom right
 						yArray[2] = ySpacing+16;
-						
+
 						g.setColor(Color.RED);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(color3);
@@ -819,7 +822,7 @@ public class Board {
 						g.setColor(Color.GRAY);
 						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 					}
-					
+
 					else if(board[x][y].isQuestionMarked()){
 						g.setColor(Color.WHITE);
 						g.drawString("?", xSpacing+10, ySpacing+19);
@@ -849,7 +852,7 @@ public class Board {
 					else{
 						//HERE
 						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
-						
+
 						g.setColor(color3);
 						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
 						g.setColor(Color.WHITE);
@@ -857,7 +860,7 @@ public class Board {
 						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
-						
+
 					}
 
 				}
@@ -874,12 +877,12 @@ public class Board {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
 		g.drawString("Flags: "+getFlagCount(), 2, getWindowY()-63);
-		
+
 		if(checkBoard){
 			g.drawString(checkBoard(), 10, getWindowY()-63);
 			checkBoard = false;
 		}
-		
+
 		if(gameOver()){
 			g.setColor(Color.WHITE);
 			g.fillRect(0, getWindowY()-78, getWindowX(), 21);
