@@ -43,6 +43,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	String difficulty;
 
 	boolean gameOver = false;
+	
+	
 
 	public static void main(String[] args) {
 
@@ -252,8 +254,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 						else if(playBoard.unopenedAround(x, y))
 							playBoard.fastClick(x,y);
 
-						if(gameOver())
-							gameOverTitle();
 
 					}
 				}
@@ -265,7 +265,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 			}
 			else
-				gameOverTitle();
+				
 			if(playBoard.lose){
 
 				anonymous();
@@ -503,17 +503,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		playBoard.openBomb();
 		repaint();
-	}
-
-	public void gameOverTitle(){
-
-		if(playBoard.getWin())
-
-			setTitle("GAME OVER! YOU WIN!");
-
-		else
-			setTitle("GAME OVER! YOU LOSE");
-
 	}
 
 	public void keyTyped(KeyEvent ev) {

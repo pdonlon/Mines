@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.color.*;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class Board {
 
@@ -42,7 +43,9 @@ public class Board {
 	boolean checkBoard = false; //TODO
 	boolean showWrong = false; //TODO
 	boolean showHint = false; //TODO
-	boolean questionMarks = true;
+	boolean questionMarks = false;
+	
+	Timer timer;
 
 	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
 	
@@ -698,6 +701,29 @@ public class Board {
 		}
 		System.out.println();
 	}
+	
+	public boolean gameOver(){
+
+		boolean gameOver = false;
+		
+		if(lose || win)
+			gameOver = true;
+		
+		return gameOver;
+	}
+	
+	public String gameOverMessage(){
+
+		String gameOver;
+		
+		if(win)
+			gameOver = "GAME OVER! YOU WIN!";
+
+		else
+			gameOver = "GAME OVER! YOU LOSE!";
+		
+		return gameOver;
+	}
 
 
 	public void paintBoard(Graphics g){
@@ -764,8 +790,8 @@ public class Board {
 				if(!board[x][y].isOpened()){
 
 					if(board[x][y].isWrong()){ //draws X					
-						g.setColor(color1);
-						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.setColor(Color.GRAY);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 						g.setColor(Color.WHITE);
 						g.drawString("X", xSpacing+10, ySpacing+19);
 					}
@@ -815,8 +841,9 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-						g.setColor(color1);
-						g.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+						//g.setColor(color1);
+						g.setColor(Color.GRAY);
+						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
 					}
 
 					else{
@@ -852,7 +879,13 @@ public class Board {
 			g.drawString(checkBoard(), 10, getWindowY()-63);
 			checkBoard = false;
 		}
-			
+		
+		if(gameOver()){
+			g.setColor(Color.WHITE);
+			g.fillRect(0, getWindowY()-78, getWindowX(), 21);
+			g.setColor(Color.BLACK);
+			g.drawString(gameOverMessage(), 2, getWindowY()-63);
+		}
 		//g.setColor(Color.);
 		//getwindowy -36
 	}
