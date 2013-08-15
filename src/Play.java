@@ -22,8 +22,8 @@ import javax.swing.*;
 public class Play extends JFrame implements ActionListener, MouseMotionListener, MouseListener, KeyListener{
 
 	JMenuItem g1 = new JMenuItem("Reset");
-	JCheckBoxMenuItem g2 = new JCheckBoxMenuItem("Question Marks");
-	JCheckBoxMenuItem g3 = new JCheckBoxMenuItem("Light Mode");
+	JCheckBoxMenuItem g2 = new JCheckBoxMenuItem("Marks (?)");
+	JCheckBoxMenuItem g3 = new JCheckBoxMenuItem("Compact");
 	JMenuItem g4 = new JMenuItem("Exit");
 
 	JCheckBoxMenuItem m1 = new JCheckBoxMenuItem("Easy");
@@ -161,6 +161,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
+		this.addKeyListener(this);
 
 		this.playBoard.initializeBoard();
 	}
@@ -519,10 +520,11 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		int keycode = ev.getKeyCode();
 
-		if(keycode == 32){ //TODO
+		if(keycode == 67){ //TODO
 
 			playBoard.check();
 			System.out.print("pressing c");
+			repaint();
 		}
 
 	}

@@ -879,7 +879,7 @@ public class Board {
 		g.drawString("Flags: "+getFlagCount(), 2, getWindowY()-63);
 
 		if(checkBoard){
-			g.drawString(checkBoard(), 10, getWindowY()-63);
+			g.drawString(checkBoard(), 60, getWindowY()-63);
 			checkBoard = false;
 		}
 
