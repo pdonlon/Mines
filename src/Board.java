@@ -4,11 +4,11 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.color.*;
+import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.Timer; 
+import java.util.TimerTask;
 
-import javax.swing.JPanel;
-import javax.swing.Timer;
 
 public class Board {
 
@@ -27,7 +27,7 @@ public class Board {
 	int flagCount;
 	int openedBoxCount; 
 	int unsafeBombCount;
-
+	
 	int flagLimit;
 	int totalBombs;
 	int totalBoxes;
@@ -47,7 +47,11 @@ public class Board {
 	boolean showHint = false; //TODO
 	boolean questionMarks = false;
 
+	int timeCounter;
+	Thread t;
+	
 	Timer timer;
+	TimerTask tt;
 
 	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
 
@@ -61,7 +65,7 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
-
+		
 		startup();
 	}
 
@@ -263,6 +267,8 @@ public class Board {
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
+		
+		timeCounter = 0;
 
 
 		win = false;
@@ -306,6 +312,8 @@ public class Board {
 
 
 	}
+	
+
 
 	public void setStartXandY(int x, int y){
 
@@ -314,9 +322,25 @@ public class Board {
 
 		placeBombs();
 		placeBombsSurrounding();
+		
+		timer = new Timer();
 
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				System.out.println("fuck u");
+				timeCounter++;
+				}
+
+			}, 0, 1000);
 	}
 
+	public void endTimer()
+	{
+		timer.cancel();
+		timer.purge();
+	}
+	
 	public void placeBombs(){
 
 		//bombs = new CheckList();
@@ -803,7 +827,7 @@ public class Board {
 		String gameOver;
 
 		if(win)
-			gameOver = "GAME OVER! YOU WIN!";
+			gameOver = "GAME OVER! YOU WIN! Time: "+timeCounter; //timer*1000;
 
 		else
 			gameOver = "GAME OVER! YOU LOSE!";

@@ -184,9 +184,18 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	public boolean gameOver(){
 
 		if(playBoard.getWin() || playBoard.getLose())
-
+		{
 			gameOver = true;
 
+			playBoard.endTimer();
+		}
+		
+		// do not delete the below comments:
+		// without the brackets it was calling endTimer on EVERY CLICK (every check to gameOver)
+		// so thank you for that
+		// you fucker
+		
+		
 		return gameOver;
 	}
 
@@ -216,6 +225,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 			int x = (e.getX()-2)/27;
 			int y = (e.getY()-26-22)/27;
+			
+			if (e.getY()-26-22 < 0)
+				return;
 
 			playBoard.add(x, y);
 			playBoard.press(x,y);
@@ -231,6 +243,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		int x = (e.getX()-2)/27;
 		int y = (e.getY()-26-22)/27;
+		
+		if (e.getY()-26-22 < 0)
+			return;
 
 		if(playBoard.isValid(x, y)){
 
