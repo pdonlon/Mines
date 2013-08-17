@@ -40,6 +40,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	CheckList bombs;
 	GameDisplay gameD;
 
+	Play game;
 	String difficulty;
 
 	boolean gameOver = false;
@@ -54,7 +55,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		//Menu newGameWindow = new Menu();
 
-		Play game = new Play("MEDIUM");
+		Play mainGame = new Play("Medium");
 		//game.playBoard.initializeBoard();
 
 		//String path = JOptionPane.showInputDialog("Pop up message text here");
@@ -68,25 +69,25 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		this.difficulty = difficulty;
 
-		if(difficulty.contains("EASY")){
-			playBoard = new Board(9,9);
+		if(difficulty.contains("Easy")){
+			playBoard = new Board(9,9,this);
 			playBoard.setTotalBombs(10);
 
 		}
 
-		else if(difficulty.contains("MEDIUM")){
-			playBoard = new Board(16,16);
+		else if(difficulty.contains("Medium")){
+			playBoard = new Board(16,16,this);
 			playBoard.setTotalBombs(40);
 		}
 
-		else if(difficulty.contains("HARD")){
-			playBoard = new Board(30,16);
+		else if(difficulty.contains("Hard")){
+			playBoard = new Board(30,16,this);
 			playBoard.setTotalBombs(99);
 		}
 
 		else{
 
-			this.setDifficulty("CUSTOM"); //TODO prevent user from doing dumb shit
+			this.setDifficulty("Cusom"); //TODO prevent user from doing dumb shit
 
 			String x = JOptionPane.showInputDialog("Desired width of your board");
 			int width = Integer.parseInt(x);
@@ -97,7 +98,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			String bombs = JOptionPane.showInputDialog("Desired number of bombs on your board");
 			int totalBombs = Integer.parseInt(bombs);
 
-			playBoard = new Board(width,height);
+			
+			playBoard = new Board(width,height,this);
 			playBoard.setTotalBombs(totalBombs);
 		}
 
@@ -471,11 +473,12 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void resetGame(){
 
+		
 		playBoard.startup();
 		playBoard.wipeBoard();
 		gameOver = false;
 
-
+		playBoard.endTimer();
 		repaint();
 	}
 

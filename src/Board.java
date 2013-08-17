@@ -16,7 +16,7 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-	Play game;
+	Play boardPlay;
 	CheckList pressed;
 	CheckList bombs;
 	Mine board[][];
@@ -60,8 +60,9 @@ public class Board {
 		return board;
 	}
 
-	public Board(int width, int height){
+	public Board(int width, int height, Play game){
 
+		boardPlay = game;
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
@@ -323,17 +324,19 @@ public class Board {
 		placeBombs();
 		placeBombsSurrounding();
 		
+		
 		timer = new Timer();
 
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("fuck u");
 				timeCounter++;
+				boardPlay.repaint();
 				}
 
 			}, 0, 1000);
 	}
+
 
 	public void endTimer()
 	{
@@ -983,7 +986,8 @@ public class Board {
 		g.fillRect(0, getWindowY()-78, getWindowX(), 21);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.BOLD,13)); // like the little mermaid
-		g.drawString("Flags: "+getFlagCount(), 2, getWindowY()-63);
+		g.drawString("Flags: "+getFlagCount(), 25, getWindowY()-63);
+		g.drawString("Time: "+timeCounter, getWindowX()-75, getWindowY()-63);
 
 		if(checkBoard){
 			g.drawString(checkBoard(), 60, getWindowY()-63);
