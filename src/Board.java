@@ -22,16 +22,17 @@ public class Board {
 	CheckList zeros;
 	CheckList fast;
 	Mine board[][];
+	Thread t;
+	Thread f;
 
 	int width; 
 	int height;
 
 	int flagCount;
-	int openedBoxCount; 
 	int unsafeBombCount;
 	int zeroCount;
 	int fastCount;
-	
+
 	int flagLimit;
 	int totalBombs;
 	int totalBoxes;
@@ -52,7 +53,7 @@ public class Board {
 	boolean questionMarks = false;
 
 	int timeCounter;
-	
+
 	Timer timer;
 	TimerTask tt;
 
@@ -69,7 +70,7 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
-		
+
 		startup();
 	}
 
@@ -93,10 +94,7 @@ public class Board {
 		height = a;
 	}
 
-	public int getOpenedBoxCount(){
 
-		return openedBoxCount;
-	}
 
 	public int getTotalBombs(){
 
@@ -262,8 +260,6 @@ public class Board {
 
 		bombs.empty();
 
-		openedBoxCount=0;
-
 		board = new Mine[width][height];
 
 		totalBoxes = width*height;
@@ -271,7 +267,7 @@ public class Board {
 		flagCount = totalBombs;
 		unsafeBombCount = totalBombs;
 		flagLimit=flagCount;
-		
+
 		timeCounter = 0;
 
 
@@ -316,7 +312,7 @@ public class Board {
 
 
 	}
-	
+
 
 
 	public void setStartXandY(int x, int y){
@@ -326,8 +322,8 @@ public class Board {
 
 		placeBombs();
 		placeBombsSurrounding();
-		
-		
+
+
 		timer = new Timer();
 
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -335,9 +331,9 @@ public class Board {
 			public void run() {
 				timeCounter++;
 				boardPlay.repaint();
-				}
+			}
 
-			}, 0, 1000);
+		}, 0, 1000);
 	}
 
 
@@ -346,7 +342,7 @@ public class Board {
 		timer.cancel();
 		timer.purge();
 	}
-	
+
 	public void placeBombs(){
 
 		//bombs = new CheckList();
@@ -397,14 +393,14 @@ public class Board {
 		}
 		return valid;
 	}
-	
+
 	public boolean isOpen(int x,int y){
-		
+
 		boolean open = false;
-		
+
 		if(board[x][y].isOpened())
 			open = true;
-		
+
 		return open;
 	}
 
@@ -423,7 +419,7 @@ public class Board {
 
 		return unopened;
 	}
-	
+
 	public boolean unopenedAndUnflaggedAround(int x, int y){
 
 		boolean unopened = false;
@@ -442,9 +438,9 @@ public class Board {
 
 	public void fastClick(int x, int y){
 
-//		fastCount=0;
-//		fast = new CheckList();
-		
+				fast = new CheckList();
+				fastCount =0;
+
 		if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding()){
 
 			for(int i=-1; i<2; i++){			
@@ -456,53 +452,48 @@ public class Board {
 						if(board[x+j][y+i].isBomb())
 							bombs.remove(x+j,y+i);
 
-						openBox(x+j,y+i);
-//						fast.enque(x+j,y+i);
-//						fastCount++;
+						fast.enque(x+j, y+i);
+						fastCount++;
 					}
 				}
 			}
+		}	
+		fastAnimation();
+	}
+
+		public void fastAnimation(){
+	
+			f = new Thread( new Runnable(){
+				public void run(){
+	
+					int acceleration =25;
+
+					while(fastCount>0){
+						try {
+							Thread.sleep(acceleration);
+						} catch(InterruptedException ex) {
+							Thread.currentThread().interrupt();
+						}
+	
+						tileOpen();
+						fastCount--;
+					}
+				}
+			});
+	
+			f.start();
+	
 		}
 		
-		//fastAnimation();	
-	}
-	
-//	public void fastAnimation(){
-//
-//		Thread t = new Thread( new Runnable(){
-//			public void run(){
-//
-//				int acceleration =20;
-//
-//				while(fastCount>0){
-//
-//					try {
-//						Thread.sleep(acceleration);
-//					} catch(InterruptedException ex) {
-//						Thread.currentThread().interrupt();
-//					}
-//
-//					tileOpen();
-//					acceleration*=.99;
-//
-//					fastCount--;
-//				}
-//			}
-//		});
-//
-//		t.start();
-//
-//	}
-//	
-//	public void tileOpen(){
-//				
-//		openBox(fast.getValues()[0],fast.getValues()[1]);
-//		
-//		zeros.deque();
-//		
-//		boardPlay.repaint();
-//	}
-	
+		public void tileOpen(){
+					
+			openBox(fast.getValues()[0],fast.getValues()[1]);
+			
+			fast.deque();
+			
+			boardPlay.repaint();
+		}
+
 	public void finishFlagging(){
 
 		for(int y=0; y<height; y++){
@@ -546,11 +537,10 @@ public class Board {
 
 						//board[tempX+i][tempY+j].setOpened(true);
 						//TODO
-						
+
 						zeros.enque(tempX+i,tempY+j);
 						zeroCount++;
-						
-						openedBoxCount++;
+						;
 
 						full.add(tempX+i, tempY+j); //add coordinates to not repeat
 
@@ -573,7 +563,7 @@ public class Board {
 
 	public void tileAnimation(){
 
-		Thread t = new Thread( new Runnable(){
+		t = new Thread( new Runnable(){
 			public void run(){
 
 				int acceleration = 2;
@@ -587,7 +577,7 @@ public class Board {
 					}
 
 					tileTurn();
-					
+
 					zeroCount--;
 				}
 			}
@@ -598,14 +588,17 @@ public class Board {
 	}
 
 	public void tileTurn(){
-		
-		board[zeros.getValues()[0]][zeros.getValues()[1]].setOpened(true);
-		
-		zeros.deque();
-		
+		try{
+			board[zeros.getValues()[0]][zeros.getValues()[1]].setOpened(true);
+
+			zeros.deque();
+		}
+		catch(Exception e){
+
+		}
 		boardPlay.repaint();
 	}
-	
+
 	public void markFlagged(int x, int y){
 
 		if(!board[x][y].opened){
@@ -739,7 +732,7 @@ public class Board {
 				if(b.isOpened() && b.getBombsSurrounding()>0){
 					if (flagsSurrounding(x,y)== b.getBombsSurrounding()&&unopenedAndUnflaggedAround(x, y)
 							|| ((flagsSurrounding(x,y)+unopenedSurrounding(x,y) == board[x][y].getBombsSurrounding())
-								&& unopenedSurrounding(x,y)>0)){
+									&& unopenedSurrounding(x,y)>0)){
 						xHint = x;
 						yHint = y;
 					}
@@ -764,7 +757,7 @@ public class Board {
 			board[bombs.getValues()[0]][bombs.getValues()[1]].setOpened(true);
 
 		//		else
-			//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
+		//			board[bombs.getValues()[0]][bombs.getValues()[1]].setWrong(true);
 
 		bombs.deque();
 
@@ -789,6 +782,15 @@ public class Board {
 
 	public void openBox(int x, int y){
 
+				if(t!=null){
+				
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
 		if(board[x][y].isFlagged())
 			removeFlag(x,y);
 
@@ -820,22 +822,36 @@ public class Board {
 				}
 
 				else if(board[x][y].getBombsSurrounding()==0){
-					openedBoxCount++;
 					openZeros(x, y);
 					tileAnimation();
 
 				}
 				else
-					openedBoxCount++;
+					;
 			}
 		}
-		if(openedBoxCount == totalBoxes - totalBombs){
+		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
 			if(flagCount >0){
 				finishFlagging();
 			}
 
 		}
+	}
+
+	public int getOpenedBoxCount(){
+
+		int opened = 0;
+
+		for(int y=0; y<height; y++){
+			for(int x=0; x<width; x++){
+
+				if(board[x][y].isOpened())
+					opened++;
+			}
+		}
+
+		return opened;
 	}
 
 	public void endOfGame(){
@@ -856,7 +872,6 @@ public class Board {
 
 			}
 		}
-
 	}
 
 
