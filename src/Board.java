@@ -19,6 +19,8 @@ public class Board {
 	Play boardPlay;
 	CheckList pressed;
 	CheckList bombs;
+	CheckList zeros;
+	CheckList fast;
 	Mine board[][];
 
 	int width; 
@@ -27,6 +29,8 @@ public class Board {
 	int flagCount;
 	int openedBoxCount; 
 	int unsafeBombCount;
+	int zeroCount;
+	int fastCount;
 	
 	int flagLimit;
 	int totalBombs;
@@ -48,7 +52,6 @@ public class Board {
 	boolean questionMarks = false;
 
 	int timeCounter;
-	Thread t;
 	
 	Timer timer;
 	TimerTask tt;
@@ -439,6 +442,9 @@ public class Board {
 
 	public void fastClick(int x, int y){
 
+//		fastCount=0;
+//		fast = new CheckList();
+		
 		if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding()){
 
 			for(int i=-1; i<2; i++){			
@@ -450,12 +456,52 @@ public class Board {
 						if(board[x+j][y+i].isBomb())
 							bombs.remove(x+j,y+i);
 
-						openBox(x+j,y+i);	
+						openBox(x+j,y+i);
+//						fast.enque(x+j,y+i);
+//						fastCount++;
 					}
 				}
 			}
 		}
+		
+		//fastAnimation();	
 	}
+	
+//	public void fastAnimation(){
+//
+//		Thread t = new Thread( new Runnable(){
+//			public void run(){
+//
+//				int acceleration =20;
+//
+//				while(fastCount>0){
+//
+//					try {
+//						Thread.sleep(acceleration);
+//					} catch(InterruptedException ex) {
+//						Thread.currentThread().interrupt();
+//					}
+//
+//					tileOpen();
+//					acceleration*=.99;
+//
+//					fastCount--;
+//				}
+//			}
+//		});
+//
+//		t.start();
+//
+//	}
+//	
+//	public void tileOpen(){
+//				
+//		openBox(fast.getValues()[0],fast.getValues()[1]);
+//		
+//		zeros.deque();
+//		
+//		boardPlay.repaint();
+//	}
 	
 	public void finishFlagging(){
 
@@ -476,6 +522,7 @@ public class Board {
 		int tempX = x;
 		int tempY = y;
 
+		zeros = new CheckList();
 		CheckList check = new CheckList();
 		check.enque(x,y);
 
@@ -497,7 +544,12 @@ public class Board {
 						//						if(board[tempX+i][tempY+j].isFlagged())
 						//							removeFlag(tempX+i,tempY+j);
 
-						board[tempX+i][tempY+j].setOpened(true);
+						//board[tempX+i][tempY+j].setOpened(true);
+						//TODO
+						
+						zeros.enque(tempX+i,tempY+j);
+						zeroCount++;
+						
 						openedBoxCount++;
 
 						full.add(tempX+i, tempY+j); //add coordinates to not repeat
@@ -519,8 +571,41 @@ public class Board {
 		}
 	}
 
+	public void tileAnimation(){
 
+		Thread t = new Thread( new Runnable(){
+			public void run(){
 
+				int acceleration = 2;
+
+				while(zeroCount>0){
+
+					try {
+						Thread.sleep(acceleration);
+					} catch(InterruptedException ex) {
+						Thread.currentThread().interrupt();
+					}
+
+					tileTurn();
+					
+					zeroCount--;
+				}
+			}
+		});
+
+		t.start();
+
+	}
+
+	public void tileTurn(){
+		
+		board[zeros.getValues()[0]][zeros.getValues()[1]].setOpened(true);
+		
+		zeros.deque();
+		
+		boardPlay.repaint();
+	}
+	
 	public void markFlagged(int x, int y){
 
 		if(!board[x][y].opened){
@@ -737,6 +822,7 @@ public class Board {
 				else if(board[x][y].getBombsSurrounding()==0){
 					openedBoxCount++;
 					openZeros(x, y);
+					tileAnimation();
 
 				}
 				else

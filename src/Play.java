@@ -281,7 +281,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 				if(playBoard.lose){
 
-					anonymous();
+					bombAnimation();
 
 				}
 			repaint();
@@ -443,10 +443,9 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		}
 	}
 
+	public void bombAnimation(){
 
-	public void anonymous(){
-
-		Thread t = new Thread( new Runnable(){
+		Thread b = new Thread( new Runnable(){
 			public void run(){
 
 				int bombsLeft = playBoard.getTotalBombs()-1;
@@ -467,7 +466,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			}
 		});
 
-		t.start();
+		b.start();
 
 	}
 
@@ -543,6 +542,14 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		else if(keycode == 72){
 			playBoard.hint();
 			repaint();
+		}
+		
+		else if(keycode == 27){
+			this.dispose();
+		}
+		
+		else if(keycode == 82){
+			resetGame();
 		}
 
 	}
