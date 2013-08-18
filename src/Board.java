@@ -40,6 +40,7 @@ public class Board {
 	int startX;
 	int startY;
 
+	int tileSize = 26;
 	boolean win = false;
 	boolean lose = false;
 
@@ -47,10 +48,10 @@ public class Board {
 	boolean touchedBomb = false;
 	boolean speedTrick = false;
 
-	boolean checkBoard = false; //TODO
-	boolean showWrong = false; //TODO
-	boolean showHint = false; //TODO
+	boolean checkBoard = false; 
+	boolean showHint = false; 
 	boolean questionMarks = false;
+	boolean compactMode = false;
 
 	int timeCounter;
 
@@ -133,14 +134,14 @@ public class Board {
 
 	public int getWindowX(){
 
-		int windowX = 27*getWidth()+1;
+		int windowX = (tileSize+1)*getWidth()+1;
 
 		return windowX;
 	}
 
 	public int getWindowY(){
 
-		int windowY = 27*getHeight()+80;
+		int windowY = (tileSize+1)*getHeight()+80;
 
 		return windowY;
 	}
@@ -194,13 +195,6 @@ public class Board {
 		else
 			return incorrect;
 
-		//TODO
-
-	}
-
-	public void showIncorrect(){
-
-		//TODO
 
 	}
 
@@ -438,8 +432,8 @@ public class Board {
 
 	public void fastClick(int x, int y){
 
-				fast = new CheckList();
-				fastCount =0;
+		fast = new CheckList();
+		fastCount =0;
 
 		if(flagsSurrounding(x,y) == board[x][y].getBombsSurrounding()){
 
@@ -461,38 +455,38 @@ public class Board {
 		fastAnimation();
 	}
 
-		public void fastAnimation(){
-	
-			f = new Thread( new Runnable(){
-				public void run(){
-	
-					int acceleration =25;
+	public void fastAnimation(){
 
-					while(fastCount>0){
-						try {
-							Thread.sleep(acceleration);
-						} catch(InterruptedException ex) {
-							Thread.currentThread().interrupt();
-						}
-	
-						tileOpen();
-						fastCount--;
+		f = new Thread( new Runnable(){
+			public void run(){
+
+				int acceleration =25;
+
+				while(fastCount>0){
+					try {
+						Thread.sleep(acceleration);
+					} catch(InterruptedException ex) {
+						Thread.currentThread().interrupt();
 					}
+
+					tileOpen();
+					fastCount--;
 				}
-			});
-	
-			f.start();
-	
-		}
-		
-		public void tileOpen(){
-					
-			openBox(fast.getValues()[0],fast.getValues()[1]);
-			
-			fast.deque();
-			
-			boardPlay.repaint();
-		}
+			}
+		});
+
+		f.start();
+
+	}
+
+	public void tileOpen(){
+
+		openBox(fast.getValues()[0],fast.getValues()[1]);
+
+		fast.deque();
+
+		boardPlay.repaint();
+	}
 
 	public void finishFlagging(){
 
@@ -683,6 +677,22 @@ public class Board {
 		board[x][y].setQuestionMarked(false);
 	}
 
+	public boolean compactModeEnabled(){
+		
+		return compactMode;
+		
+	}
+	
+	public void setCompactMode(boolean a){
+		
+		compactMode = a;
+	}
+	
+	public void setTileSize(int a){
+		
+		tileSize = a;
+	}
+	
 	public int flagsSurrounding(int x, int y){
 
 		int flags = 0;
@@ -782,15 +792,15 @@ public class Board {
 
 	public void openBox(int x, int y){
 
-				if(t!=null){
-				
-				try {
-					t.join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				}
+		if(t!=null){
+
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if(board[x][y].isFlagged())
 			removeFlag(x,y);
 
@@ -959,11 +969,11 @@ public class Board {
 			for(int x=0; x<width; x++){
 
 				if(!board[x][y].isOpened()&&!board[x][y].isWrong()){
-					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+28};
-					int[] yLightTri ={ySpacing+1,ySpacing+28,ySpacing+1};
+					int[] xLightTri ={xSpacing+1,xSpacing+1,xSpacing+(tileSize+2)};
+					int[] yLightTri ={ySpacing+1,ySpacing+(tileSize+2),ySpacing+1};
 
-					int[] xDarkTri ={xSpacing+28,xSpacing+28,xSpacing+1};
-					int[] yDarkTri ={ySpacing+28,ySpacing+1,ySpacing+28};
+					int[] xDarkTri ={xSpacing+(tileSize+2),xSpacing+(tileSize+2),xSpacing+1};
+					int[] yDarkTri ={ySpacing+(tileSize+2),ySpacing+1,ySpacing+(tileSize+2)};
 
 					g.setColor(Color.LIGHT_GRAY);
 					g.fillPolygon(xLightTri, yLightTri, 3);
@@ -972,13 +982,13 @@ public class Board {
 					g.fillPolygon(xDarkTri, yDarkTri, 3);
 
 					g.setColor(Color.GRAY);
-					g.fillRect(xSpacing+1+3, ySpacing+1+3, 27-6, 27-6);	
+					g.fillRect(xSpacing+1+3, ySpacing+1+3, (tileSize+1)-6, (tileSize+1)-6);	
 
 				}
 
-				xSpacing+=27;
+				xSpacing+=(tileSize+1);
 			}
-			ySpacing+=27;
+			ySpacing+=(tileSize+1);
 		}
 
 		Color color1 = new Color(140,140,140,128);
@@ -989,7 +999,7 @@ public class Board {
 		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
 		g2d.setPaint(gp);
 		g.fillRect( 0, 0, getWindowX(), getWindowY()-78);	
-		//g2d.fillRect(xSpacing+1, ySpacing+1, 26, 26);
+		//g2d.fillRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 
 		ySpacing =0;
 
@@ -1005,13 +1015,29 @@ public class Board {
 
 					if(board[x][y].isWrong()){ //draws X					
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 						g.setColor(Color.WHITE);
-						g.drawString("X", xSpacing+10, ySpacing+19);
+						g.setFont(font);
+						if(compactMode)
+							g.drawString("X", xSpacing+8, ySpacing+17);
+						else
+							g.drawString("X", xSpacing+11, ySpacing+19);
 					}
 
 					else if(board[x][y].isFlagged()){
 
+						if(compactMode){
+							xArray[0] = xSpacing+8; //top left
+							yArray[0] = ySpacing+6;
+
+							xArray[1] = xSpacing+18; //top mid
+							yArray[1] = ySpacing+11;
+
+							xArray[2] = xSpacing+8; //bottom right
+							yArray[2] = ySpacing+14;
+						}
+						
+						else{
 						xArray[0] = xSpacing+10; //top left
 						yArray[0] = ySpacing+8;
 
@@ -1020,23 +1046,31 @@ public class Board {
 
 						xArray[2] = xSpacing+10; //bottom right
 						yArray[2] = ySpacing+16;
-
+						}
+						
 						g.setColor(Color.RED);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(color3);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
-						g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
+						if(compactMode)
+							g.drawLine(xSpacing+7, ySpacing+7, xSpacing+7, ySpacing+18);
+						else
+							g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
 					}
 
 					else if(board[x][y].beingPressed()){
 						g.setColor(Color.GRAY);
-						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 					}
 
 					else if(board[x][y].isQuestionMarked()){
 						g.setColor(Color.WHITE);
-						g.drawString("?", xSpacing+10, ySpacing+19);
+						g.setFont(font);
+						if(compactMode)
+							g.drawString("?", xSpacing+8, ySpacing+16);
+						else
+							g.drawString("?", xSpacing+11, ySpacing+19);
 					}
 
 				}
@@ -1045,40 +1079,52 @@ public class Board {
 					if(board[x][y].isBomb()){
 
 						g.setColor(Color.BLACK);
-						g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
-						g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
-						g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
-						g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
-						g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
 
+						if(compactMode){
+							g.fillOval(xSpacing+9-2, ySpacing+9-2, 10, 10);
+							g.drawLine(xSpacing+8-2, ySpacing+8-2, xSpacing+21-2, ySpacing+21-2); //top left/bottom right
+							g.drawLine(xSpacing+5-2, ySpacing+14-2, xSpacing+23-2, ySpacing+14-2);//mid 
+							g.drawLine(xSpacing+21-2, ySpacing+8-2, xSpacing+8-2, ySpacing+21-2);//top right/bottom left
+							g.drawLine(xSpacing+14-2, ySpacing+5-2, xSpacing+14-2, ySpacing+23-2);//top/down
+						}
+						else{
+							g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
+							g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
+							g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
+							g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
+							g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
+						}
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
 						//g.setColor(color1);
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 					}
 
 					else{
 						//HERE
-						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 
 						g.setColor(color3);
-						g.fillRect(xSpacing+1, ySpacing+1, 27, 27);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 						g.setColor(Color.WHITE);
 						g.setFont(font);
-						g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
+						if(compactMode)
+							g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+8, ySpacing+16);
+						else
+							g.drawString(""+board[x][y].getBombsSurrounding(), xSpacing+10, ySpacing+19);
 						g.setColor(Color.GRAY);
-						g.drawRect(xSpacing+1, ySpacing+1, 26, 26);
+						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 
 					}
 
 				}
 
-				xSpacing += 27;
+				xSpacing += (tileSize+1);
 			}
-			ySpacing+= 27;
+			ySpacing+= (tileSize+1);
 		}
 
 		g.setColor(Color.GRAY);
@@ -1099,7 +1145,7 @@ public class Board {
 			Color color = new Color(255,255,0,255);
 			g.setColor(color);
 			g2d.setStroke(new BasicStroke(3));
-			g.drawRect(getHint()[0]*27+2, getHint()[1]*27+2, 25, 25);
+			g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25);
 			System.out.print(""+getHint()[0]+","+getHint()[1]);
 			showHint = false;
 		}

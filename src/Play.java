@@ -225,8 +225,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
-			int x = (e.getX()-2)/27;
-			int y = (e.getY()-26-22)/27;
+			int x = (e.getX()-2)/(playBoard.tileSize+1);
+			int y = (e.getY()-26-22)/(playBoard.tileSize+1);
 			
 			if (e.getY()-26-22 < 0)
 				return;
@@ -243,8 +243,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		if(!playBoard.isEmpty())
 			playBoard.resetPressed();
 
-		int x = (e.getX()-2)/27;
-		int y = (e.getY()-26-22)/27;
+		int x = (e.getX()-2)/(playBoard.tileSize+1);
+		int y = (e.getY()-26-22)/(playBoard.tileSize+1);
 		
 		if (e.getY()-26-22 < 0)
 			return;
@@ -305,8 +305,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		if(SwingUtilities.isLeftMouseButton(e)){
 
-			int x = (e.getX()-2)/27;
-			int y = (e.getY()-26-22)/27;
+			int x = (e.getX()-2)/(playBoard.tileSize+1);
+			int y = (e.getY()-26-22)/(playBoard.tileSize+1);
 
 
 
@@ -336,7 +336,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			questionMarks();
 
 		else if(e.getSource() == g3){
-			System.out.print("Well...this is embarassing");
+			compactMode();
 		}
 
 		else if(e.getSource() == g4){
@@ -436,7 +436,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 
 			playBoard.setUp();
-			this.setSize(27*this.playBoard.getWidth()+1,27*this.playBoard.getHeight()+23+53);
+			this.setSize(playBoard.getWindowX(),playBoard.getWindowY());
 			resetGame();
 			playBoard.initializeBoard();
 
@@ -454,7 +454,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 				while(bombsLeft>0){
 
 					try {
-						Thread.sleep(60);
+						Thread.sleep(20);
 					} catch(InterruptedException ex) {
 						Thread.currentThread().interrupt();
 					}
@@ -510,6 +510,20 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			g2.setSelected(true);
 			playBoard.setQuestionMarks(true);
 		}
+	}
+	
+	public void compactMode(){
+		if(playBoard.compactModeEnabled()){
+			g3.setSelected(false);
+			playBoard.setCompactMode(false);
+			playBoard.setTileSize(26);
+		}
+		else{
+			g3.setSelected(true);
+			playBoard.setCompactMode(true);
+			playBoard.setTileSize(20);
+		}
+		this.setSize(playBoard.getWindowX(),playBoard.getWindowY());
 	}
 
 	public void explosion(){
