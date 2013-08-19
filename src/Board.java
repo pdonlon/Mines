@@ -992,7 +992,11 @@ public class Board {
 		}
 
 		Color color1 = new Color(140,140,140,128);
-		Color color2 = new Color(39,39,39,128);
+//		Color color2 = new Color(39,39,39,128);
+		
+		
+//		Color color1 = new Color(252,252,252,128);
+		Color color2 = new Color(0,0,0,128);
 		Color color3 = new Color(200,200,200,127);
 
 		Graphics2D g2d = (Graphics2D)g;
