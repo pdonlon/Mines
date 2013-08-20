@@ -155,7 +155,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 		this.pack();
 		setTitle("Mines");
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //EXIT_ON_CLOSE
 		this.add(gameD);
 		this.setSize(playBoard.getWindowX(),playBoard.getWindowY());
 		this.setVisible(true);
