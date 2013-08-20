@@ -54,7 +54,8 @@ public class Board {
 	boolean compactMode = false;
 
 	int timeCounter;
-
+	int gameOverTime;
+	
 	Timer timer;
 	TimerTask tt;
 
@@ -443,16 +444,20 @@ public class Board {
 					if(isValid(x+j,y+i) && !board[x+j][y+i].isOpened() && !board[x+j][y+i].isFlagged()){
 
 
-						if(board[x+j][y+i].isBomb())
+						if(board[x+j][y+i].isBomb()){
 							bombs.remove(x+j,y+i);
-
+							lose = true;
+							endOfGame();
+						}
 						fast.enque(x+j, y+i);
 						fastCount++;
+						
 					}
 				}
 			}
-		}	
+		}
 		fastAnimation();
+		checkWin();
 	}
 
 	public void fastAnimation(){
@@ -525,12 +530,6 @@ public class Board {
 							!full.alreadyInFullList(tempX+i, tempY+j)&&
 							!board[tempX+i][tempY+j].isOpened()&&
 							!board[tempX+i][tempY+j].isFlagged()){
-
-						//						if(board[tempX+i][tempY+j].isFlagged())
-						//							removeFlag(tempX+i,tempY+j);
-
-						//board[tempX+i][tempY+j].setOpened(true);
-						//TODO
 
 						zeros.enque(tempX+i,tempY+j);
 						zeroCount++;
@@ -836,10 +835,14 @@ public class Board {
 					tileAnimation();
 
 				}
-				else
-					;
+				else;
 			}
 		}
+		checkWin();
+	}
+	
+	void checkWin(){
+		
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
 			if(flagCount >0){
@@ -847,6 +850,7 @@ public class Board {
 			}
 
 		}
+		
 	}
 
 	public int getOpenedBoxCount(){
@@ -932,6 +936,8 @@ public class Board {
 
 		if(lose || win)
 			gameOver = true;
+		
+		gameOverTime = timeCounter;
 
 		return gameOver;
 	}
@@ -941,17 +947,17 @@ public class Board {
 		String gameOver;
 
 		if(win)
-			gameOver = "GAME OVER! YOU WIN! Time: "+timeCounter; //timer*1000;
+			gameOver = "GAME OVER! YOU WIN! Time: "+gameOverTime; //timer*1000;
 
 		else
-			gameOver = "GAME OVER! YOU LOSE!";
+			gameOver = "GAME OVER! YOU LOSE! "+gameOverTime;
 
 		return gameOver;
 	}
 
 
 	public void paintBoard(Graphics g){
-
+		
 		if(speedTrick)
 			g.drawString("", 1, 1);
 		else
@@ -992,13 +998,9 @@ public class Board {
 		}
 
 		Color color1 = new Color(140,140,140,128);
-//		Color color2 = new Color(39,39,39,128);
+		Color color2 = new Color(39,39,39,128);
+		Color color3 = new Color(200,200,200,127);;
 		
-		
-//		Color color1 = new Color(252,252,252,128);
-		Color color2 = new Color(0,0,0,128);
-		Color color3 = new Color(200,200,200,127);
-
 		Graphics2D g2d = (Graphics2D)g;
 		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
 		g2d.setPaint(gp);
@@ -1018,6 +1020,8 @@ public class Board {
 				if(!board[x][y].isOpened()){
 
 					if(board[x][y].isWrong()){ //draws X					
+						g.setColor(color1);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 						g.setColor(Color.WHITE);
@@ -1082,6 +1086,9 @@ public class Board {
 
 					if(board[x][y].isBomb()){
 
+						g.setColor(color1);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
+						
 						g.setColor(Color.BLACK);
 
 						if(compactMode){
@@ -1102,15 +1109,14 @@ public class Board {
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 					}
 					else if(board[x][y].getBombsSurrounding()==0){
-						//g.setColor(color1);
+						g.setColor(color1);
+						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 					}
 
 					else{
-						//HERE
 						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
-
 						g.setColor(color3);
 						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 						g.setColor(Color.WHITE);

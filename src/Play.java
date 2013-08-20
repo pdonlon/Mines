@@ -472,7 +472,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public void resetGame(){
 
-		
 		playBoard.startup();
 		playBoard.wipeBoard();
 		gameOver = false;
@@ -559,7 +558,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		}
 		
 		else if(keycode == 27){
-			this.dispose();
+			System.exit(0);
 		}
 		
 		else if(keycode == 82){
