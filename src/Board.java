@@ -54,7 +54,6 @@ public class Board {
 	boolean compactMode = false;
 
 	int timeCounter;
-	int gameOverTime;
 	
 	Timer timer;
 	TimerTask tt;
@@ -936,8 +935,6 @@ public class Board {
 
 		if(lose || win)
 			gameOver = true;
-		
-		gameOverTime = timeCounter;
 
 		return gameOver;
 	}
@@ -947,10 +944,10 @@ public class Board {
 		String gameOver;
 
 		if(win)
-			gameOver = "GAME OVER! YOU WIN! Time: "+gameOverTime; //timer*1000;
+			gameOver = "GAME OVER! YOU WIN! Time: "+timeCounter; //timer*1000;
 
 		else
-			gameOver = "GAME OVER! YOU LOSE! "+gameOverTime;
+			gameOver = "GAME OVER! YOU LOSE! "+timeCounter;
 
 		return gameOver;
 	}

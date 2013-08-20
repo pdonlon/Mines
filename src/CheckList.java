@@ -81,7 +81,7 @@ public class CheckList {
 		
 		Node check = new Node(x,y);
 		
-		if(head == check)
+		if(head.getXCord()==x && head.getYCord()==y)
 			already = true;
 		
 		return already;
