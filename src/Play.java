@@ -49,19 +49,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 
 	public static void main(String[] args) {
 
-		//JFrame secret = new JFrame();
-
-		//JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
-
-		//Menu newGameWindow = new Menu();
-
 		Play mainGame = new Play("Medium");
-		//game.playBoard.initializeBoard();
-
-		//String path = JOptionPane.showInputDialog("Pop up message text here");
-
-		//JFrame window = new JFrame(""+game.getDifficulty());
-
 
 	}
 
@@ -109,7 +97,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		JMenuBar menuBar = new JMenuBar();
 		JMenu game = new JMenu("Game");
 		JMenu mode = new JMenu("Mode");
-
 		gameD = new GameDisplay();
 		this.setJMenuBar(menuBar);
 
@@ -190,14 +177,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 			gameOver = true;
 
 			playBoard.endTimer();
-		}
-		
-		// do not delete the below comments:
-		// without the brackets it was calling endTimer on EVERY CLICK (every check to gameOver)
-		// so thank you for that
-		// you fucker
-		
-		
+		}		
 		return gameOver;
 	}
 
@@ -349,7 +329,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		else if(e.getSource() == h1) //about
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
 		else if(e.getSource() == h2) //instructions
-			JOptionPane.showMessageDialog(null, "Open all the tiles without hitting a bomb.\nNumbered tiles indicate how many bombs are touching it.\nLeft click to open a single tile.\nFlag a tile by right clicking.\nDouble click a tile with the correct amount of flags around it for a speed click.\nDouble click the starting tile for a quick reset.");
+			JOptionPane.showMessageDialog(null, "Open all the tiles without hitting a bomb.\nNumbered tiles indicate how many bombs are touching it.\nLeft click to open a single tile.\nFlag a tile by right clicking.\nSingle click a tile with the correct amount of flags around it for a speed click.\nDouble click the starting tile for a quick reset.");
 		else if(e.getSource() == h3) //more apps
 			goOnline("http://www.github.com/pdonlon");
 
