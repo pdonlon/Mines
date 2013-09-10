@@ -31,10 +31,10 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	JCheckBoxMenuItem m3 = new JCheckBoxMenuItem("Hard");
 	JCheckBoxMenuItem m4 = new JCheckBoxMenuItem("Custom");
 
-
-	JMenuItem h1 = new JMenuItem("About");
-	JMenuItem h2 = new JMenuItem("Instructions");
-	JMenuItem h3 = new JMenuItem("More Apps...");
+	JMenuItem h1 = new JMenuItem("Hint");
+	JMenuItem h2 = new JMenuItem("About");
+	JMenuItem h3 = new JMenuItem("Instructions");
+	JMenuItem h4 = new JMenuItem("More Apps...");
 
 	Board playBoard;
 	CheckList bombs;
@@ -118,6 +118,7 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		help.add(h1);
 		help.add(h2);
 		help.add(h3);
+		help.add(h4);
 
 		g1.addActionListener(this);
 		g2.addActionListener(this);
@@ -133,6 +134,8 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		h1.addActionListener(this);
 		h2.addActionListener(this);
 		h3.addActionListener(this);
+		h4.addActionListener(this);
+
 
 		mode.addActionListener(this);
 		game.addActionListener(this);
@@ -197,7 +200,6 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 	}
 
 	public void mouseClicked(MouseEvent e) {
-
 
 	}
 
@@ -326,11 +328,18 @@ public class Play extends JFrame implements ActionListener, MouseMotionListener,
 		else if(e.getSource() == g1) //reset
 			this.resetGame();
 
-		else if(e.getSource() == h1) //about
+		else if(e.getSource() == h1)//hints
+		{
+			playBoard.hint();
+		repaint();
+		}
+		else if(e.getSource() == h2) //about
 			JOptionPane.showMessageDialog(null,"Mines\nby Philip Donlon");
-		else if(e.getSource() == h2) //instructions
+
+		else if(e.getSource() == h3) //instructions
 			JOptionPane.showMessageDialog(null, "Open all the tiles without hitting a bomb.\nNumbered tiles indicate how many bombs are touching it.\nLeft click to open a single tile.\nFlag a tile by right clicking.\nSingle click a tile with the correct amount of flags around it for a speed click.\nDouble click the starting tile for a quick reset.");
-		else if(e.getSource() == h3) //more apps
+
+		else if(e.getSource() == h4)//more apps
 			goOnline("http://www.github.com/pdonlon");
 
 		if(e.getSource()==m1 || e.getSource()==m2 || e.getSource()==m3 || e.getSource()==m4){

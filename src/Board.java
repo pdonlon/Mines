@@ -54,11 +54,12 @@ public class Board {
 	boolean compactMode = false;
 
 	int timeCounter;
-	
+
 	Timer timer;
 	TimerTask tt;
 
-	Font font = new Font("SANS_SERIF", Font.BOLD,10); 
+	Font font = new Font("SANS_SERIF", Font.BOLD,10);
+	Font compactFont = new Font("SANS_SERIF", Font.BOLD,8);
 
 	public Mine[][] getBoard(){
 
@@ -450,7 +451,7 @@ public class Board {
 						}
 						fast.enque(x+j, y+i);
 						fastCount++;
-						
+
 					}
 				}
 			}
@@ -676,21 +677,21 @@ public class Board {
 	}
 
 	public boolean compactModeEnabled(){
-		
+
 		return compactMode;
-		
+
 	}
-	
+
 	public void setCompactMode(boolean a){
-		
+
 		compactMode = a;
 	}
-	
+
 	public void setTileSize(int a){
-		
+
 		tileSize = a;
 	}
-	
+
 	public int flagsSurrounding(int x, int y){
 
 		int flags = 0;
@@ -795,7 +796,7 @@ public class Board {
 			try {
 				t.join();
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 		}
@@ -839,9 +840,9 @@ public class Board {
 		}
 		checkWin();
 	}
-	
+
 	void checkWin(){
-		
+
 		if(getOpenedBoxCount() == totalBoxes - totalBombs){
 			win = true;
 			if(flagCount >0){
@@ -849,7 +850,7 @@ public class Board {
 			}
 
 		}
-		
+
 	}
 
 	public int getOpenedBoxCount(){
@@ -944,17 +945,26 @@ public class Board {
 		String gameOver;
 
 		if(win)
-			gameOver = "GAME OVER! YOU WIN! Time: "+timeCounter; //timer*1000;
-
+		{
+			if(!compactMode)
+				gameOver = "Game Over! You win! Time: "+timeCounter; //timer*1000;
+			else
+				gameOver = "Game over you win! Time: "+timeCounter; //timer*1000;
+		}
 		else
-			gameOver = "GAME OVER! YOU LOSE! "+timeCounter;
+		{
+			if(!compactMode)
+				gameOver = "Game Over! You Lose! "+timeCounter;
+			else
+				gameOver = "Game over you lose! Time: "+timeCounter; //timer*1000;
+		}
 
 		return gameOver;
 	}
 
 
 	public void paintBoard(Graphics g){
-		
+
 		if(speedTrick)
 			g.drawString("", 1, 1);
 		else
@@ -997,7 +1007,7 @@ public class Board {
 		Color color1 = new Color(140,140,140,128);
 		Color color2 = new Color(39,39,39,128);
 		Color color3 = new Color(200,200,200,127);;
-		
+
 		Graphics2D g2d = (Graphics2D)g;
 		GradientPaint gp = new GradientPaint(0, 0, color1, getWindowX(), getWindowY()-78, color2);
 		g2d.setPaint(gp);
@@ -1041,18 +1051,18 @@ public class Board {
 							xArray[2] = xSpacing+8; //bottom right
 							yArray[2] = ySpacing+14;
 						}
-						
+
 						else{
-						xArray[0] = xSpacing+10; //top left
-						yArray[0] = ySpacing+8;
+							xArray[0] = xSpacing+10; //top left
+							yArray[0] = ySpacing+8;
 
-						xArray[1] = xSpacing+20; //top mid
-						yArray[1] = ySpacing+13;
+							xArray[1] = xSpacing+20; //top mid
+							yArray[1] = ySpacing+13;
 
-						xArray[2] = xSpacing+10; //bottom right
-						yArray[2] = ySpacing+16;
+							xArray[2] = xSpacing+10; //bottom right
+							yArray[2] = ySpacing+16;
 						}
-						
+
 						g.setColor(Color.RED);
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(color3);
@@ -1085,7 +1095,7 @@ public class Board {
 
 						g.setColor(color1);
 						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
-						
+
 						g.setColor(Color.BLACK);
 
 						if(compactMode){
@@ -1152,7 +1162,10 @@ public class Board {
 			Color color = new Color(255,255,0,255);
 			g.setColor(color);
 			g2d.setStroke(new BasicStroke(3));
-			g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25);
+			if(!compactMode)
+				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25);
+			else
+				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20);
 			System.out.print(""+getHint()[0]+","+getHint()[1]);
 			showHint = false;
 		}
