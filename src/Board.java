@@ -16,7 +16,7 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
-	Play boardPlay;
+	GameDisplay game;
 	CheckList pressed;
 	CheckList bombs;
 	CheckList zeros;
@@ -66,9 +66,9 @@ public class Board {
 		return board;
 	}
 
-	public Board(int width, int height, Play game){
+	public Board(int width, int height, GameDisplay g){
 
-		boardPlay = game;
+		game = g;
 		this.width = width;
 		this.height = height;
 		bombs = new CheckList();
@@ -325,7 +325,7 @@ public class Board {
 			@Override
 			public void run() {
 				timeCounter++;
-				boardPlay.repaint();
+				game.repaint();
 			}
 
 		}, 0, 1000);
@@ -490,7 +490,7 @@ public class Board {
 
 		fast.deque();
 
-		boardPlay.repaint();
+		game.repaint();
 	}
 
 	public void finishFlagging(){
@@ -589,7 +589,7 @@ public class Board {
 		catch(Exception e){
 
 		}
-		boardPlay.repaint();
+		game.repaint();
 	}
 
 	public void markFlagged(int x, int y){
