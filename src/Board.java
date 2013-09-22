@@ -16,6 +16,8 @@ public class Board {
 	//	beg 	8x8 	10		54
 	//	med 	16x16 	40		216
 	//	exp 	30x16 	99		381
+
+	boolean doneAnimating = true;
 	GameDisplay game;
 	CheckList pressed;
 	CheckList bombs;
@@ -50,6 +52,7 @@ public class Board {
 
 	boolean checkBoard = false; 
 	boolean showHint = false; 
+	boolean showCheck = false;
 	boolean questionMarks = false;
 	boolean compactMode = false;
 
@@ -95,8 +98,6 @@ public class Board {
 
 		height = a;
 	}
-
-
 
 	public int getTotalBombs(){
 
@@ -176,26 +177,29 @@ public class Board {
 
 	}
 
-	public String checkBoard(){
+	public boolean doneAnimating()
+	{
+		return doneAnimating;
+	}
 
-		String correct = "correct";
-		String incorrect = "incorrect";
+	public void setDoneAnimating(boolean a)
+	{
+		doneAnimating = a;
+	}
 
-		boolean right = true;
+	public boolean checkBoard(){
+		
+		boolean correct = true;		
 
 		for(int y =0; y<height; y++){
 			for(int x=0; x<width; x++){
 
 				if(board[x][y].isFlagged()&&!board[x][y].isBomb())
-					right = false;
+					correct = false;
 			}
 		}
 
-		if(right)
-			return correct;
-		else
-			return incorrect;
-
+		return correct;
 
 	}
 
@@ -559,6 +563,8 @@ public class Board {
 		t = new Thread( new Runnable(){
 			public void run(){
 
+				doneAnimating = false;
+
 				int acceleration = 2;
 
 				while(zeroCount>0){
@@ -573,11 +579,11 @@ public class Board {
 
 					zeroCount--;
 				}
+				doneAnimating = true;
 			}
 		});
 
 		t.start();
-
 	}
 
 	public void tileTurn(){
@@ -759,6 +765,16 @@ public class Board {
 		showHint = true;
 
 	}
+	
+	public void removeHint(){
+
+		showHint = false;
+	}
+	
+	public void setCheck(boolean a)
+	{
+		showCheck = a;
+	}
 
 	public void openBomb(){
 
@@ -888,48 +904,6 @@ public class Board {
 		}
 	}
 
-
-
-	public void printBoard(){
-
-		for(int y=0; y<height; y++){
-			for(int x=0; x<width; x++){
-
-
-
-				if(!board[x][y].isOpened()){
-
-					if(board[x][y].isWrong())
-						System.out.print("X ");
-
-					else if(board[x][y].isFlagged())
-						System.out.print("F ");
-
-					else
-						System.out.print(". ");
-				}
-
-				else{
-
-					if(board[x][y].isBomb()){
-						System.out.print("B ");
-					}
-
-
-					else if(board[x][y].getBombsSurrounding()==0){
-						System.out.print("0 ");
-					}
-
-					else
-						System.out.print(board[x][y].getBombsSurrounding()+" ");
-				}
-
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-
 	public boolean gameOver(){
 
 		boolean gameOver = false;
@@ -1045,18 +1019,18 @@ public class Board {
 							xArray[0] = xSpacing+8; //top left
 							yArray[0] = ySpacing+6;
 
-							xArray[1] = xSpacing+18; //top mid
-							yArray[1] = ySpacing+11;
+							xArray[1] = xSpacing+17; //top mid
+							yArray[1] = ySpacing+9;
 
-							xArray[2] = xSpacing+8; //bottom right
-							yArray[2] = ySpacing+14;
+							xArray[2] = xSpacing+7; //bottom right
+							yArray[2] = ySpacing+13;
 						}
 
 						else{
 							xArray[0] = xSpacing+10; //top left
 							yArray[0] = ySpacing+8;
 
-							xArray[1] = xSpacing+20; //top mid
+							xArray[1] = xSpacing+23; //top mid
 							yArray[1] = ySpacing+13;
 
 							xArray[2] = xSpacing+10; //bottom right
@@ -1069,9 +1043,15 @@ public class Board {
 						g.fillPolygon(xArray,yArray, 3);
 						g.setColor(Color.BLACK);
 						if(compactMode)
-							g.drawLine(xSpacing+7, ySpacing+7, xSpacing+7, ySpacing+18);
-						else
-							g.drawLine(xSpacing+9, ySpacing+7, xSpacing+9, ySpacing+20);
+						{
+							g.drawLine(xSpacing+7, ySpacing+6, xSpacing+7, ySpacing+17);
+							g.drawLine(xSpacing+8, ySpacing+6, xSpacing+8, ySpacing+17);
+						}
+						else{
+							g.drawLine(xSpacing+9, ySpacing+8, xSpacing+9, ySpacing+22);
+							g.drawLine(xSpacing+10, ySpacing+8, xSpacing+10, ySpacing+22);
+
+						}
 					}
 
 					else if(board[x][y].beingPressed()){
@@ -1100,22 +1080,48 @@ public class Board {
 
 						if(compactMode){
 							g.fillOval(xSpacing+9-2, ySpacing+9-2, 10, 10);
+							
 							g.drawLine(xSpacing+8-2, ySpacing+8-2, xSpacing+21-2, ySpacing+21-2); //top left/bottom right
+							g.drawLine(xSpacing+8-2, ySpacing+8-2-1, xSpacing+21-2, ySpacing+21-2-1); //top left/bottom right
+							g.drawLine(xSpacing+8-2, ySpacing+8-2+1, xSpacing+21-2, ySpacing+21-2+1); //top left/bottom right
+
 							g.drawLine(xSpacing+5-2, ySpacing+14-2, xSpacing+23-2, ySpacing+14-2);//mid 
+							g.drawLine(xSpacing+5-2, ySpacing+14-1, xSpacing+23-2, ySpacing+14-1);//mid 
+
+							
 							g.drawLine(xSpacing+21-2, ySpacing+8-2, xSpacing+8-2, ySpacing+21-2);//top right/bottom left
+							g.drawLine(xSpacing+21-2, ySpacing+8-2-1, xSpacing+8-2, ySpacing+21-2-1);//top right/bottom left
+							g.drawLine(xSpacing+21-2, ySpacing+8-2+1, xSpacing+8-2, ySpacing+21-2+1);//top right/bottom left
+							
 							g.drawLine(xSpacing+14-2, ySpacing+5-2, xSpacing+14-2, ySpacing+23-2);//top/down
+							g.drawLine(xSpacing+14-1, ySpacing+5-2, xSpacing+14-1, ySpacing+23-2);//top/down
+
 						}
 						else{
-							g.fillOval(xSpacing+9, ySpacing+9, 10, 10);
-							g.drawLine(xSpacing+8, ySpacing+8, xSpacing+21, ySpacing+21); //top left/bottom right
-							g.drawLine(xSpacing+5, ySpacing+14, xSpacing+23, ySpacing+14);//mid 
-							g.drawLine(xSpacing+21, ySpacing+8, xSpacing+8, ySpacing+21);//top right/bottom left
-							g.drawLine(xSpacing+14, ySpacing+5, xSpacing+14, ySpacing+23);//top/down
+							
+							g.fillOval(xSpacing+9, ySpacing+9, 11, 11);
+							
+							g.drawLine(xSpacing+7, ySpacing+7, xSpacing+22, ySpacing+22); //top left/bottom right
+							g.drawLine(xSpacing+7, ySpacing+7-1, xSpacing+22, ySpacing+22-1); //top left/bottom right
+							g.drawLine(xSpacing+7, ySpacing+7+1, xSpacing+22, ySpacing+22+1); //top left/bottom right
+
+
+							g.drawLine(xSpacing+5-2, ySpacing+14, xSpacing+23+2, ySpacing+14);//mid 
+							g.drawLine(xSpacing+5-2, ySpacing+15, xSpacing+23+2, ySpacing+15);//mid 
+
+							g.drawLine(xSpacing+22, ySpacing+7, xSpacing+7, ySpacing+22);//top right/bottom left
+							g.drawLine(xSpacing+22, ySpacing+7-1, xSpacing+7, ySpacing+22-1);//top right/bottom left
+							g.drawLine(xSpacing+22, ySpacing+7+1, xSpacing+7, ySpacing+22+1);//top right/bottom left
+							
+							g.drawLine(xSpacing+14, ySpacing+5-2, xSpacing+14, ySpacing+23+2);//top/down
+							g.drawLine(xSpacing+15, ySpacing+5-2, xSpacing+15, ySpacing+23+2);//top/down
+
 						}
 						g.setColor(Color.GRAY);
 						g.drawRect(xSpacing+1, ySpacing+1, (tileSize), (tileSize));
 					}
-					else if(board[x][y].getBombsSurrounding()==0){
+					else if(board[x][y].getBombsSurrounding()==0)
+					{
 						g.setColor(color1);
 						g.fillRect(xSpacing+1, ySpacing+1, (tileSize+1), (tileSize+1));
 						g.setColor(Color.GRAY);
@@ -1153,9 +1159,15 @@ public class Board {
 		g.drawString("Flags: "+getFlagCount(), 25, getWindowY()-63);
 		g.drawString("Time: "+timeCounter, getWindowX()-75, getWindowY()-63);
 
-		if(checkBoard){
-			g.drawString(checkBoard(), 60, getWindowY()-63);
-			checkBoard = false;
+		if(showCheck){
+			
+			if(checkBoard())
+				g.setColor(new Color(0, 255, 0,80));
+			else
+				g.setColor(new Color(255, 0, 0,80));
+			
+			g.fillRect(0, 0, getWindowX(), getWindowY()-78);
+			
 		}
 
 		if(showHint){
@@ -1167,7 +1179,6 @@ public class Board {
 			else
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20);
 			System.out.print(""+getHint()[0]+","+getHint()[1]);
-			showHint = false;
 		}
 
 		if(gameOver()){
