@@ -188,6 +188,8 @@ public class GameDisplay extends JPanel implements ActionListener, MouseListener
 
 	public void mousePressed(MouseEvent e) {
 
+		playBoard.removeHint();
+		
 		if(SwingUtilities.isLeftMouseButton(e)){
 
 			int x = (e.getX()-2)/(playBoard.tileSize+1);
@@ -517,6 +519,8 @@ public class GameDisplay extends JPanel implements ActionListener, MouseListener
 
 	public void keyPressed(KeyEvent ev) {
 
+		playBoard.removeHint();
+		
 		int keycode = ev.getKeyCode();
 
 		if(keycode == 67){ //TODO

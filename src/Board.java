@@ -744,10 +744,11 @@ public class Board {
 
 				Mine b = board[x][y];
 
-				if(b.isOpened() && b.getBombsSurrounding()>0){
+				if(b.isOpened() && b.getBombsSurrounding()>0)
+				{
 					if (flagsSurrounding(x,y)== b.getBombsSurrounding()&&unopenedAndUnflaggedAround(x, y)
-							|| ((flagsSurrounding(x,y)+unopenedSurrounding(x,y) == board[x][y].getBombsSurrounding())
-									&& unopenedSurrounding(x,y)>0)){
+							|| ((unopenedSurrounding(x,y) == board[x][y].getBombsSurrounding())
+									&& flagsSurrounding(x,y) != board[x][y].getBombsSurrounding())){
 						xHint = x;
 						yHint = y;
 					}
@@ -1177,8 +1178,8 @@ public class Board {
 			if(!compactMode)
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 25, 25);
 			else
+		
 				g.drawRect(getHint()[0]*(tileSize+1)+2, getHint()[1]*(tileSize+1)+2, 20, 20);
-			System.out.print(""+getHint()[0]+","+getHint()[1]);
 		}
 
 		if(gameOver()){
