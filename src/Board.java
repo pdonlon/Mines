@@ -52,6 +52,7 @@ public class Board {
 
 	boolean checkBoard = false; 
 	boolean showHint = false; 
+	boolean hintColorYellow = false;
 	boolean showCheck = false;
 	boolean questionMarks = false;
 	boolean compactMode = false;
@@ -751,6 +752,11 @@ public class Board {
 									&& flagsSurrounding(x,y) != board[x][y].getBombsSurrounding())){
 						xHint = x;
 						yHint = y;
+						
+						if(flagsSurrounding(x,y)== b.getBombsSurrounding()&&unopenedAndUnflaggedAround(x, y))
+							hintColorYellow = true;
+						else
+							hintColorYellow = false;
 					}
 				}
 			}
@@ -1172,7 +1178,10 @@ public class Board {
 		}
 
 		if(showHint){
-			Color color = new Color(255,255,0,255);
+			getHint();
+			Color color = new Color(255,0,0,255);
+			if(hintColorYellow)
+				color = new Color(255,255,0,255);
 			g.setColor(color);
 			g2d.setStroke(new BasicStroke(3));
 			if(!compactMode)
